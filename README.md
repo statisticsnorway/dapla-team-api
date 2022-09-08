@@ -11,7 +11,7 @@ API for interacting with Dapla Team specific information, such as member and gro
 ```
 GET /users{?fields}
 ```
-Response
+Response - 200
 ```json
 [
   {
@@ -49,12 +49,37 @@ Response
 ]
 ```
 
+### Get a specific user
+
+```
+GET /users/{email_short}
+```
+Response - 200
+```json
+{
+  "name": "Donald Duck",
+  "email": "donald.duck@ssb.no",
+  "email_short": "kons-don@ssb.no",
+  "_links": {
+    "self": {
+      "href": "http://localhost:8080/users/kons-don@ssb.no"
+    },
+    "teams": {
+      "href": "http://localhost:8080/users/kons-don@ssb.no/teams"
+    },
+    "groups": {
+      "href": "http://localhost:8080/users/kons-don@ssb.no/groups"
+    }
+  }
+}
+```
+
 ### List all Dapla teams
 
 ```
 GET /teams
 ```
-Response
+Response - 200
 ```json
 [
   {
@@ -64,8 +89,8 @@ Response
       "self": {
         "href": "http://localhost:8080/teams/demo-enhjoern-a"
       },
-      "members": {
-        "href": "http://localhost:8080/teams/{team_name}/members{?fields}",
+      "users": {
+        "href": "http://localhost:8080/teams/{team_name}/users{?fields}",
         "templated": true
       },
       "groups": {
@@ -79,12 +104,17 @@ Response
 ]
 ```
 
+Implementation:
+* Use GitHub as master system for this. Git IaC repos tagged with a specific topic. Information for each team
+is fetched from the team's `terraform.tfvars` file.
+* The list of repos should be cached
+
 ### List members of a specific team
 
 ```
-GET /teams/{team_name}/members{?fields}
+GET /teams/{team_name}/users{?fields}
 ```
-Response
+Response - 200
 ```json
 [
   {
@@ -93,13 +123,13 @@ Response
     "email_short": "kons-don@ssb.no",
     "_links": {
       "self": {
-        "href": "http://localhost:8080/members/kons-don@ssb.no"
+        "href": "http://localhost:8080/users/kons-don@ssb.no"
       },
       "teams": {
-        "href": "http://localhost:8080/members/kons-don@ssb.no/teams"
+        "href": "http://localhost:8080/users/kons-don@ssb.no/teams"
       },
       "groups": {
-        "href": "http://localhost:8080/members/kons-don@ssb.no/groups"
+        "href": "http://localhost:8080/users/kons-don@ssb.no/groups"
       }
     }
   },
@@ -109,17 +139,22 @@ Response
     "email_short": "mm@ssb.no",
     "_links": {
       "self": {
-        "href": "http://localhost:8080/members/mm@ssb.no"
+        "href": "http://localhost:8080/users/mm@ssb.no"
       },
       "teams": {
-        "href": "http://localhost:8080/members/mm@ssb.no/teams"
+        "href": "http://localhost:8080/users/mm@ssb.no/teams"
       },
       "groups": {
-        "href": "http://localhost:8080/members/mm@ssb.no/groups"
+        "href": "http://localhost:8080/users/mm@ssb.no/groups"
       }
     }
   }
 ]
+```
+
+### Clear and optianally refresh the teams cache
+```
+DELETE /teams/cache{?refresh}
 ```
 
 ### List groups of a specific team
@@ -127,14 +162,15 @@ Response
 ```
 GET /teams/{team_name}/groups{?fields}
 ```
-`fields=members` will include the members of each group, and if `fields` is omitted this list is not included
+`fields=users` will include the members of each group, and if `fields` is omitted this list is not included
 
-Response (with members included)
+Response (with members included) - 200
 ```json
 [
   {
-    "name": "demo-enhjoern-a-managers",
-    "members": [
+    "id": "demo-enhjoern-a-managers",
+    "shortname": "managers",
+    "users": [
       {
         "name": "Mikke Mus",
         "email": "mikke.mus@ssb.no",
@@ -149,7 +185,7 @@ Response (with members included)
   },
   {
     "name": "demo-enhjoern-a-data-admins",
-    "members": [
+    "users": [
       {
         "name": "Donald Duck",
         "email": "donald.duck@ssb.no",
@@ -163,4 +199,57 @@ Response (with members included)
     }
   }
 ]
+```
+
+### Add member to a specific group
+
+```
+PATCH /teams/{team_name}/groups/{group_name}
+```
+
+Payload
+```json
+{
+  "users": [
+    {
+      "email_short": "kons-don@ssb.no"
+    }
+  ]
+}
+```
+
+Either: 
+Response - 201 (Created)
+```json
+{
+  "name": "demo-enhjoern-a-managers",
+  "users": [
+    {
+      "name": "Mikke Mus",
+      "email": "mikke.mus@ssb.no",
+      "email_short": "mm@ssb.no"
+    },
+    {
+      "name": "Donald Duck",
+      "email": "donald.duck@ssb.no",
+      "email_short": "kons-don@ssb.no"
+    }
+  ],
+  "_links": {
+    "self": {
+      "href": "http://localhost:8080/teams/demo-enhjoern-a/groups/demo-enhjoern-a-managers"
+    }
+  }
+}
+
+or 
+
+Response - 202 (Accepted)
+
+```json
+{
+  "message": "Request has been forwarded to to Kundeservice for manual processing. Patience you must have, my young Padawan"
+}
+````
+
 ```
