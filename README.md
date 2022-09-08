@@ -11,7 +11,7 @@ API for interacting with Dapla Team specific information, such as member and gro
 ```
 GET /users{?fields}
 ```
-Response - 200
+Response: 200 (OK)
 ```json
 [
   {
@@ -54,7 +54,7 @@ Response - 200
 ```
 GET /users/{email_short}
 ```
-Response - 200
+Response: 200 (OK)
 ```json
 {
   "name": "Donald Duck",
@@ -79,7 +79,7 @@ Response - 200
 ```
 GET /teams
 ```
-Response - 200
+Response: 200 (OK)
 ```json
 [
   {
@@ -250,6 +250,6 @@ Response: 202 (Accepted)
 
 ```json
 {
-  "message": "Request has been forwarded to to Kundeservice for manual processing. Patience you must have, my young Padawan"
+  "message": "Request has been forwarded to Kundeservice for manual processing. Patience you must have, my young Padawan"
 }
 ```
