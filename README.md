@@ -114,7 +114,7 @@ is fetched from the team's `terraform.tfvars` file.
 ```
 GET /teams/{team_name}/users{?fields}
 ```
-Response - 200
+Response: 200 (OK)
 ```json
 [
   {
@@ -164,7 +164,7 @@ GET /teams/{team_name}/groups{?fields}
 ```
 `fields=users` will include the members of each group, and if `fields` is omitted this list is not included
 
-Response (with members included) - 200
+Response: 200 (OK)
 ```json
 [
   {
@@ -218,8 +218,9 @@ Payload
 }
 ```
 
-Either: 
-Response - 201 (Created)
+*Either* 
+
+Response: 201 (Created)
 ```json
 {
   "name": "demo-enhjoern-a-managers",
@@ -241,15 +242,14 @@ Response - 201 (Created)
     }
   }
 }
+```
 
-or 
+*or*
 
-Response - 202 (Accepted)
+Response: 202 (Accepted)
 
 ```json
 {
   "message": "Request has been forwarded to to Kundeservice for manual processing. Patience you must have, my young Padawan"
 }
-````
-
 ```
