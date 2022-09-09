@@ -13,40 +13,42 @@ GET /users{?fields}
 ```
 Response: 200 (OK)
 ```json
-[
-  {
-    "name": "Donald Duck",
-    "email": "donald.duck@ssb.no",
-    "email_short": "kons-don@ssb.no",
-    "_links": {
-      "self": {
-        "href": "http://localhost:8080/users/kons-don@ssb.no"
-      },
-      "teams": {
-        "href": "http://localhost:8080/users/kons-don@ssb.no/teams"
-      },
-      "groups": {
-        "href": "http://localhost:8080/users/kons-don@ssb.no/groups"
+{
+  "users": [
+    {
+      "name": "Donald Duck",
+      "email": "donald.duck@ssb.no",
+      "email_short": "kons-don@ssb.no",
+      "_links": {
+        "self": {
+          "href": "http://localhost:8080/users/kons-don@ssb.no"
+        },
+        "teams": {
+          "href": "http://localhost:8080/users/kons-don@ssb.no/teams"
+        },
+        "groups": {
+          "href": "http://localhost:8080/users/kons-don@ssb.no/groups"
+        }
+      }
+    },
+    {
+      "name": "Mikke Mus",
+      "email": "mikke.mus@ssb.no",
+      "email_short": "mm@ssb.no",
+      "_links": {
+        "self": {
+          "href": "http://localhost:8080/users/mm@ssb.no"
+        },
+        "teams": {
+          "href": "http://localhost:8080/users/mm@ssb.no/teams"
+        },
+        "groups": {
+          "href": "http://localhost:8080/users/mm@ssb.no/groups"
+        }
       }
     }
-  },
-  {
-    "name": "Mikke Mus",
-    "email": "mikke.mus@ssb.no",
-    "email_short": "mm@ssb.no",
-    "_links": {
-      "self": {
-        "href": "http://localhost:8080/users/mm@ssb.no"
-      },
-      "teams": {
-        "href": "http://localhost:8080/users/mm@ssb.no/teams"
-      },
-      "groups": {
-        "href": "http://localhost:8080/users/mm@ssb.no/groups"
-      }
-    }
-  }
-]
+  ]
+}
 ```
 
 ### Get a specific user
@@ -81,27 +83,29 @@ GET /teams
 ```
 Response: 200 (OK)
 ```json
-[
-  {
-    "uniform_team_name": "demo-enhjoern-a",
-    "display_team_name": "Demo Enhjørning A",
-    "_links": {
-      "self": {
-        "href": "http://localhost:8080/teams/demo-enhjoern-a"
-      },
-      "users": {
-        "href": "http://localhost:8080/teams/{team_name}/users{?fields}",
-        "templated": true
-      },
-      "groups": {
-        "href": "http://localhost:8080/teams/{team_name}/groups"
-      },
-      "iac_repo": {
-        "href": "https://github.com/statisticsnorway/demo-enhjoern-a-iac"
+{
+  "teams": [
+    {
+      "uniform_team_name": "demo-enhjoern-a",
+      "display_team_name": "Demo Enhjørning A",
+      "_links": {
+        "self": {
+          "href": "http://localhost:8080/teams/demo-enhjoern-a"
+        },
+        "users": {
+          "href": "http://localhost:8080/teams/{team_name}/users{?fields}",
+          "templated": true
+        },
+        "groups": {
+          "href": "http://localhost:8080/teams/{team_name}/groups"
+        },
+        "iac_repo": {
+          "href": "https://github.com/statisticsnorway/demo-enhjoern-a-iac"
+        }
       }
     }
-  }
-]
+  ]
+}
 ```
 
 Implementation:
@@ -116,40 +120,42 @@ GET /teams/{team_name}/users{?fields}
 ```
 Response: 200 (OK)
 ```json
-[
-  {
-    "name": "Donald Duck",
-    "email": "donald.duck@ssb.no",
-    "email_short": "kons-don@ssb.no",
-    "_links": {
-      "self": {
-        "href": "http://localhost:8080/users/kons-don@ssb.no"
-      },
-      "teams": {
-        "href": "http://localhost:8080/users/kons-don@ssb.no/teams"
-      },
-      "groups": {
-        "href": "http://localhost:8080/users/kons-don@ssb.no/groups"
+{
+  "users": [
+    {
+      "name": "Donald Duck",
+      "email": "donald.duck@ssb.no",
+      "email_short": "kons-don@ssb.no",
+      "_links": {
+        "self": {
+          "href": "http://localhost:8080/users/kons-don@ssb.no"
+        },
+        "teams": {
+          "href": "http://localhost:8080/users/kons-don@ssb.no/teams"
+        },
+        "groups": {
+          "href": "http://localhost:8080/users/kons-don@ssb.no/groups"
+        }
+      }
+    },
+    {
+      "name": "Mikke Mus",
+      "email": "mikke.mus@ssb.no",
+      "email_short": "mm@ssb.no",
+      "_links": {
+        "self": {
+          "href": "http://localhost:8080/users/mm@ssb.no"
+        },
+        "teams": {
+          "href": "http://localhost:8080/users/mm@ssb.no/teams"
+        },
+        "groups": {
+          "href": "http://localhost:8080/users/mm@ssb.no/groups"
+        }
       }
     }
-  },
-  {
-    "name": "Mikke Mus",
-    "email": "mikke.mus@ssb.no",
-    "email_short": "mm@ssb.no",
-    "_links": {
-      "self": {
-        "href": "http://localhost:8080/users/mm@ssb.no"
-      },
-      "teams": {
-        "href": "http://localhost:8080/users/mm@ssb.no/teams"
-      },
-      "groups": {
-        "href": "http://localhost:8080/users/mm@ssb.no/groups"
-      }
-    }
-  }
-]
+  ]
+}
 ```
 
 ### Clear and optianally refresh the teams cache
@@ -166,39 +172,42 @@ GET /teams/{team_name}/groups{?fields}
 
 Response: 200 (OK)
 ```json
-[
-  {
-    "id": "demo-enhjoern-a-managers",
-    "shortname": "managers",
-    "users": [
-      {
-        "name": "Mikke Mus",
-        "email": "mikke.mus@ssb.no",
-        "email_short": "mm@ssb.no"
+{
+  "groups": [
+    {
+      "id": "demo-enhjoern-a-managers",
+      "shortname": "managers",
+      "users": [
+        {
+          "name": "Mikke Mus",
+          "email": "mikke.mus@ssb.no",
+          "email_short": "mm@ssb.no"
+        }
+      ],
+      "_links": {
+        "self": {
+          "href": "http://localhost:8080/teams/demo-enhjoern-a/groups/demo-enhjoern-a-managers"
+        }
       }
-    ],
-    "_links": {
-      "self": {
-        "href": "http://localhost:8080/teams/demo-enhjoern-a/groups/demo-enhjoern-a-managers"
+    },
+    {
+      "name": "demo-enhjoern-a-data-admins",
+      "users": [
+        {
+          "name": "Donald Duck",
+          "email": "donald.duck@ssb.no",
+          "email_short": "kons-don@ssb.no"
+        }
+      ],
+      "_links": {
+        "self": {
+          "href": "http://localhost:8080/teams/demo-enhjoern-a/groups/demo-enhjoern-a-data-admins"
+        }
       }
     }
-  },
-  {
-    "name": "demo-enhjoern-a-data-admins",
-    "users": [
-      {
-        "name": "Donald Duck",
-        "email": "donald.duck@ssb.no",
-        "email_short": "kons-don@ssb.no"
-      }
-    ],
-    "_links": {
-      "self": {
-        "href": "http://localhost:8080/teams/demo-enhjoern-a/groups/demo-enhjoern-a-data-admins"
-      }
-    }
-  }
-]
+  ]
+}
+
 ```
 
 ### Add member to a specific group
