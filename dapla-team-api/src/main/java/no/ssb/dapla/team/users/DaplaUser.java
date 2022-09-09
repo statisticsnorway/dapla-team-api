@@ -1,11 +1,14 @@
-package no.ssb.dapla.team.model;
+package no.ssb.dapla.team.users;
 
+import lombok.Data;
+
+@Data
 public class DaplaUser {
 	
 	private String name;
 	private String email;
-	private String email_short;
-	
+	private String emailShort;
+	/*
 	public DaplaUser() {
 		
 	}
@@ -35,6 +38,7 @@ public class DaplaUser {
 	public void setEmail_short(String email_short) {
 		this.email_short = email_short;
 	}
+	*/
 
 	
 }

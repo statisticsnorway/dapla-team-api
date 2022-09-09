@@ -1,4 +1,4 @@
-package no.ssb.dapla.team.controller;
+package no.ssb.dapla.team;
 
 import java.util.HashMap;
 import java.util.Map;
