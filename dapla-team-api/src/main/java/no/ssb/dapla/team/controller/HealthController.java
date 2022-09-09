@@ -5,12 +5,22 @@ import java.util.Map;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+* Rest controller for Health Indicators
+* @author  Anders Lunde
+* @version 0.01
+* @since   2022-09-09 
+*/
 @RestController
 public class HealthController {
 	
+	/**
+	 * Can be used to poll for API liveness
+	 * @return Map containing {"name":"dapla-start-api","status":"UP"} 
+	 */
+	
 	@GetMapping("health/liveness")
 	public Map<String, String> getHealthMapping(){
-	    //Can be used to poll for API liveness
 		Map<String, String> response = new HashMap<>();
 		response.put("name", "dapla-start-api");
 		response.put("status", "UP");
@@ -18,9 +28,14 @@ public class HealthController {
 		return response;
 	}
 	
+	
+	/**
+	 * Can be used to poll for API readiness
+	 * @return Map containing {"name":"dapla-start-api","status":"UP"} 
+	 */
+	
 	@GetMapping("health/readiness")
 	public Map<String, String> getHealthReadiness(){
-	    //Can be used to poll for API readiness
 		Map<String, String> response = new HashMap<>();
 		response.put("name", "dapla-start-api");
 		response.put("status", "UP");
