@@ -42,7 +42,7 @@ jobs:
       artifactName: dapla-team-api
       gcrNamespace: dapla
       mavenContainer: maven:3.8-openjdk-17
-      checkStyleRunAnalysis: true
-      pmdRunAnalysis: true
-      sonarQubeRunAnalysis: true
+      checkStyleRunAnalysis: false
+      pmdRunAnalysis: false
+      sonarQubeRunAnalysis: false
       sonarCloud: bipSonarCloud-Dapla
