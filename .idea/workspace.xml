@@ -5,19 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="430bb986-7966-479e-8d04-0710a1a39053" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/no/ssb/dapla/team/HomeController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/no/ssb/dapla/team/DaplaTeamApiApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/no/ssb/dapla/team/DaplaTeamApiApplication.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/no/ssb/dapla/team/HomeController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/no/ssb/dapla/team/groups/DaplaGroup.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/no/ssb/dapla/team/teams/DaplaTeam.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/no/ssb/dapla/team/users/DaplaUser.class" beforeDir="false" />
     </list>
     <list id="9309d866-57c9-4ca1-99db-055040c56a0a" name="Changes by kenneth" comment="">
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/no/ssb/dapla/team/DaplaTeamApiApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/no/ssb/dapla/team/DaplaTeamApiApplication.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,23 +41,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/damirmedakovic/Desktop/rubberduck/dapla-team-api&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;spring.configuration.checksum&quot;: &quot;54df199f5584202ebd049cc525f5bd21&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "/Users/damirmedakovic/Desktop/rubberduck/api/dapla-team-api",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "spring.configuration.checksum": "54df199f5584202ebd049cc525f5bd21"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="DaplaTeamApiApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
       <module name="dapla-team-api" />
@@ -98,6 +90,7 @@
       <workItem from="1662726679184" duration="4309000" />
       <workItem from="1662970295241" duration="1118000" />
       <workItem from="1662971427816" duration="1171000" />
+      <workItem from="1662973434909" duration="656000" />
     </task>
     <servers />
   </component>
