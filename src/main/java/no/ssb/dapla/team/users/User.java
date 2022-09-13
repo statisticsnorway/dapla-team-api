@@ -6,7 +6,6 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.*;
 import no.ssb.dapla.team.groups.Group;
-import org.springframework.jmx.export.annotation.ManagedNotification;
 
 import java.util.Set;
 
