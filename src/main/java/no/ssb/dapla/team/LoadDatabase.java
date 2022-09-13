@@ -7,6 +7,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.HashMap;
+
 @Configuration
 @Slf4j
 public class LoadDatabase {
@@ -15,10 +17,18 @@ public class LoadDatabase {
     CommandLineRunner initDatabase(TeamRepository teamRepository) {
 
         return args -> {
-            log.info("Preloading" + teamRepository.save(
-                    Team.builder().uniformTeamName("demo-enhjoern-a").displayTeamName("Demo Enhjørning A").build()));
-            log.info("Preloading" + teamRepository.save(
-                    Team.builder().uniformTeamName("demo-enhjoern-b").displayTeamName("Demo Enhjørning B").build()));
+
+                    String[] groupsDef = {"-support","-data-admins","-managers","-developers"};
+                    String[] team = {"demo-enhjoern-a","demo-enhjoern-b","demo-enhjoern-c","demo-enhjoern-d"};
+                    String[] teamDisplay = {"Demo Enhjoern a","Demo Enhjoern B","Demo Enhjoern C","Demo Enhjoern D"};
+
+                    for(int i = 0; i < team.length;i++){
+                        log.info("Preloading" + teamRepository.save(
+
+                        Team.builder().uniformTeamName(team[i]).displayTeamName("Demo Enhjørning A").build()));
+                    }
+
+
         };
     }
 
