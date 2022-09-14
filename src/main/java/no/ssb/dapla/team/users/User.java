@@ -12,12 +12,12 @@ import org.hibernate.annotations.NotFoundAction;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name="SSBUser")
+@Entity(name = "SSBUser")
 public class User {
-	@Id
-	@NonNull
-	private String emailShort;
-	private String name;
-	private String email;
+    @Id
+    @NonNull
+    private String emailShort;
+    private String name;
+    private String email;
 
 }

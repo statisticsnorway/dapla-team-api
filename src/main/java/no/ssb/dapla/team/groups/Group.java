@@ -1,4 +1,5 @@
 package no.ssb.dapla.team.groups;
+
 import jakarta.persistence.*;
 import lombok.*;
 import no.ssb.dapla.team.teams.Team;
@@ -12,7 +13,7 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name="AuthGroup")
+@Entity(name = "AuthGroup")
 //table ble kalt auth_group ikke /s
 public class Group {
     @Id
