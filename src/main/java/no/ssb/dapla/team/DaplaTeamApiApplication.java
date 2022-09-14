@@ -8,9 +8,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class DaplaTeamApiApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(DaplaTeamApiApplication.class, args);
-		log.info("Version {}", BuildInfo.INSTANCE.getVersionAndBuildTimestamp());
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(DaplaTeamApiApplication.class, args);
+        log.info("Version {}", BuildInfo.INSTANCE.getVersionAndBuildTimestamp());
+    }
 
 }
