@@ -6,7 +6,6 @@ import no.ssb.dapla.team.groups.GroupRepository;
 import no.ssb.dapla.team.teams.Team;
 import no.ssb.dapla.team.teams.TeamRepository;
 import no.ssb.dapla.team.users.User;
-import no.ssb.dapla.team.users.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +17,7 @@ import java.util.*;
 public class LoadDatabase {
 
     @Bean
-    CommandLineRunner initDatabase(TeamRepository teamRepository, GroupRepository groupRepository, UserRepository userRepository) {
+    CommandLineRunner initDatabase(TeamRepository teamRepository, GroupRepository groupRepository) {
 
         return args -> {
 
