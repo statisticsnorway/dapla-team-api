@@ -1,6 +1,5 @@
 package no.ssb.dapla.team.users;
 
-import no.ssb.dapla.team.teams.TeamController;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
