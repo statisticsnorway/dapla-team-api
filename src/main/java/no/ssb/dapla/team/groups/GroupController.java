@@ -20,26 +20,16 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequiredArgsConstructor
 public class GroupController {
 
-    private final GroupRepository groupRepository;
-
-    private final GroupModelAssembler assembler;
+    private final GroupService groupService;
 
     @GetMapping()
     public CollectionModel<EntityModel<Group>> list() {
-        List<EntityModel<Group>> groups = groupRepository.findAll().stream() //
-                .map(assembler::toModel) //
-                .toList();
-
-        return CollectionModel.of(groups, //
-                linkTo(methodOn(GroupController.class).list()).withSelfRel());
+        return groupService.list();
     }
 
     @GetMapping("/{id}")
     public EntityModel<Group> getById(@PathVariable String id) {
-        Group team = groupRepository.findById(id) //
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Group " + id + " does not exist"));
-
-        return assembler.toModel(team);
+        return groupService.getById(id);
     }
 
 }

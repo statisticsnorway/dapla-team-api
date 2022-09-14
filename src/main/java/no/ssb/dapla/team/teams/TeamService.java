@@ -48,7 +48,7 @@ public class TeamService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Team " + teamName + " does not exist"));
 
         Set<User> resultSet = new HashSet();
-        for(Group g : team.getGroups()){
+        for (Group g : team.getGroups()) {
             g.getUsers().forEach(elem -> resultSet.add(elem));
         }
 
