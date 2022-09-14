@@ -53,7 +53,11 @@ public class LoadDatabase {
                         .build();
                 log.info("Preloading" + teamRepository.save(t));
             }
+/*
 
+            teamRepository.save(Team.builder().uniformTeamName("demo-enhjoern-a").displayTeamName("Demo Enhjørning A").build());
+            teamRepository.save(Team.builder().uniformTeamName("demo-enhjoern-b").displayTeamName("Demo Enhjørning B").build());
+ */
         };
     }
 }
