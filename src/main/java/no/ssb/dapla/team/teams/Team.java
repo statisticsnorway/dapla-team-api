@@ -1,8 +1,13 @@
 package no.ssb.dapla.team.teams;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.*;
 import no.ssb.dapla.team.groups.Group;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 import java.util.Set;
 
@@ -11,13 +16,13 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="teams")
 public class Team {
     @Id
-    @NonNull
+    //@NonNull
     private String uniformTeamName;
     private String displayTeamName;
 
     @OneToMany
-    Set<Group> groups;
+    private Set<Group> Groups;
+
 }

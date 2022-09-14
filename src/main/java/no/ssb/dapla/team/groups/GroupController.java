@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -35,9 +36,9 @@ public class GroupController {
     }
 
     @GetMapping("/{id}")
-    public EntityModel<Group> getById(@PathVariable String groupId) {
-        Group team = groupRepository.findById(groupId) //
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Group " + groupId + " does not exist"));
+    public EntityModel<Group> getById(@PathVariable String id) {
+        Group team = groupRepository.findById(id) //
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Group " + id + " does not exist"));
 
         return assembler.toModel(team);
     }

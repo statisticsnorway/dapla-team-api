@@ -1,9 +1,10 @@
 package no.ssb.dapla.team.groups;
-
 import jakarta.persistence.*;
 import lombok.*;
 import no.ssb.dapla.team.teams.Team;
 import no.ssb.dapla.team.users.User;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 import java.util.Set;
 
@@ -11,16 +12,17 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name="groups")
+@Entity(name="AuthGroup")
+//table ble kalt auth_group ikke /s
 public class Group {
     @Id
     @NonNull
     private String id;
 
-    @OneToOne
-    private Team team;
-
+    //@OneToMany(mappedBy = "authGroup")
     @OneToMany
+    @Cascade(CascadeType.ALL)
     private Set<User> users;
+
+
 }
