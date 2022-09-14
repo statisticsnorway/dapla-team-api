@@ -28,41 +28,32 @@ public class LoadDatabase {
             String[] shortEmail = {"Mi@ssb.no", "Do@ssb.no", "Sk@ssb.no","Jo@sbb.no","Mons@ssb.no"};
             String[] longEmail = {"Mikke@ssb.no", "Dolly@sbb.no", "Skrue.no","Jokke@ssb.no","Mons@ssb.no"};
 
+            /*
+            Group g = Group.builder().id("demo-enhjoern-a-support").users(Set.of(
+                    User.builder().name("Nikk").emailShort("nih@ssb.no").email("nikk@ssb.no").build(),
+                    User.builder().name("Harry").emailShort("hah@ssb.no").email("harry@ssb.no").build(),
+                    User.builder().name("Henry").emailShort("hh@ssb.no").email("henry@ssb.no").build()
+            )).build();
+
+            log.info("Preloading" + groupRepository.save(
+                    g
+            ));*/
 
             for(int i = 0; i < teamNameList.length;i++) {
-
-                Team t = Team.builder().uniformTeamName(teamNameList[i]).displayTeamName(teamDisplayNameList[i])
+                Team t = Team.builder()
+                        .uniformTeamName(teamNameList[i])
+                        .displayTeamName(teamDisplayNameList[i])
                         .Groups(Set.of(Group.builder()
-                                .id(teamNameList[i]+groupsPostfixList[i])
-                                .users(Set.of(User.builder().name(names[i]).emailShort(shortEmail[i]).email(longEmail[i])
-                                        .build()))
+                                        .id(teamNameList[i]+groupsPostfixList[i])
+                                        .users(Set.of(User.builder()
+                                                .name(names[i])
+                                                .emailShort(shortEmail[i])
+                                                .email(longEmail[i]).build()))
                                 .build()))
                         .build();
-
-                setup();
-                /*
-                Group g = Group.builder().id(t.getUniformTeamName() + "-support").users(
-                        Set.of(User.builder().name("Donald").emailShort("sh@ssb.no").email("long@ssb.no").build())
-                ).build();
-
-                log.info("Preloading" + groupRepository.save(
-                        g
-                ));
-
-                 */
-                log.info("Preloading" + teamRepository.save(
-                        t
-                ));
+                log.info("Preloading" + teamRepository.save(t));
             }
-
-
 
         };
     }
-
-    static void setup(){
-
-    }
-
-
 }
