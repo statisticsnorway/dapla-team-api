@@ -13,13 +13,11 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "AuthGroup")
-//table ble kalt auth_group ikke /s
 public class Group {
     @Id
     @NonNull
     private String id;
 
-    //@OneToMany(mappedBy = "authGroup")
     @OneToMany
     @Cascade(CascadeType.ALL)
     private Set<User> users;
