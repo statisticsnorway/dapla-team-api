@@ -20,26 +20,16 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserRepository userRepository;
-
-    private final UserModelAssembler assembler;
+    private final UserService userService;
 
     @GetMapping()
     public CollectionModel<EntityModel<User>> list() {
-        List<EntityModel<User>> user = userRepository.findAll().stream() //
-                .map(assembler::toModel)
-                .toList();
-
-        return CollectionModel.of(user, //
-                linkTo(methodOn(UserController.class).list()).withSelfRel());
+        return userService.list();
     }
 
     @GetMapping("/{id}")
     public EntityModel<User> getById(@PathVariable String id) {
-        User user = userRepository.findById(id) //
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User " + id + " does not exist"));
-
-        return assembler.toModel(user);
+        return userService.getById(id);
     }
 
 }
