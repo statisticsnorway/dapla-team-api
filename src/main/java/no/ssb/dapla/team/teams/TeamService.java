@@ -1,7 +1,6 @@
 package no.ssb.dapla.team.teams;
 
 import lombok.Data;
-import no.ssb.dapla.team.groups.Group;
 import no.ssb.dapla.team.users.User;
 import no.ssb.dapla.team.users.UserController;
 import no.ssb.dapla.team.users.UserModelAssembler;
@@ -13,7 +12,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -47,10 +45,10 @@ public class TeamService {
         Team team = teamRepository.findById(teamName) //
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Team " + teamName + " does not exist"));
 
-        Set<User> resultSet = new HashSet();
-        for (Group g : team.getGroups()) {
-            g.getUsers().forEach(elem -> resultSet.add(elem));
-        }
+        HashSet<User> resultSet = new HashSet<>();
+
+        team.getGroups()
+                .forEach(group -> resultSet.addAll(group.getUsers()));
 
         List<EntityModel<User>> resultModel = resultSet.stream()
                 .map(userModelAssembler::toModel)
