@@ -2,7 +2,6 @@ package no.ssb.dapla.team.groups;
 
 import jakarta.persistence.*;
 import lombok.*;
-import no.ssb.dapla.team.teams.Team;
 import no.ssb.dapla.team.users.User;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;

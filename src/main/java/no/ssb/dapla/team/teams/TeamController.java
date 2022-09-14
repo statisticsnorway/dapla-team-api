@@ -1,6 +1,7 @@
 package no.ssb.dapla.team.teams;
 
 import lombok.RequiredArgsConstructor;
+import no.ssb.dapla.team.users.User;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
@@ -20,26 +21,21 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequiredArgsConstructor
 public class TeamController {
 
-    private final TeamRepository teamRepository;
-
-    private final TeamModelAssembler assembler;
+    private final TeamService teamService;
 
     @GetMapping()
     public CollectionModel<EntityModel<Team>> list() {
-        List<EntityModel<Team>> teams = teamRepository.findAll().stream() //
-                .map(assembler::toModel)
-                .toList();
-
-        return CollectionModel.of(teams, //
-                linkTo(methodOn(TeamController.class).list()).withSelfRel());
+        return teamService.list();
     }
 
     @GetMapping("/{id}")
     public EntityModel<Team> getById(@PathVariable String id) {
-        Team team = teamRepository.findById(id) //
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Team " + id + " does not exist"));
+        return teamService.getById(id);
+    }
 
-        return assembler.toModel(team);
+    @GetMapping("/{teamName}/users")
+    public CollectionModel<EntityModel<User>> getUsersInTeam(@PathVariable String teamName) {
+        return teamService.getUsersInTeam(teamName);
     }
 
 }

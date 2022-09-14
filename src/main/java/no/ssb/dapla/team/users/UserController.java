@@ -1,9 +1,6 @@
 package no.ssb.dapla.team.users;
 
 import lombok.RequiredArgsConstructor;
-import no.ssb.dapla.team.teams.Team;
-import no.ssb.dapla.team.teams.TeamModelAssembler;
-import no.ssb.dapla.team.teams.TeamRepository;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
