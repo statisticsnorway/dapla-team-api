@@ -5,10 +5,13 @@ import lombok.*;
 import no.ssb.dapla.team.users.User;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,6 +23,7 @@ public class Group {
 
     @OneToMany
     @Cascade(CascadeType.ALL)
+    @NotFound(action = NotFoundAction.IGNORE)
     private Set<User> users;
 
 
