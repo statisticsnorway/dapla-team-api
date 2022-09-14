@@ -24,60 +24,44 @@ public class LoadDatabase {
             String[] groupsPostfixList = {"-support", "-data-admins", "-managers", "-developers"};
             String[] teamNameList = {"demo-enhjoern-a", "demo-enhjoern-b", "demo-enhjoern-c", "demo-enhjoern-d"};
             String[] teamDisplayNameList = {"Demo Enhjoern a", "Demo Enhjoern B", "Demo Enhjoern C", "Demo Enhjoern D"};
-            String[] names = {"Mikke", "Dolly", "Skrue"};
+            String[] names = {"Mikke", "Dolly", "Skrue","Jokke","Mons"};
+            String[] shortEmail = {"Mi@ssb.no", "Do@ssb.no", "Sk@ssb.no","Jo@sbb.no","Mons@ssb.no"};
+            String[] longEmail = {"Mikke@ssb.no", "Dolly@sbb.no", "Skrue.no","Jokke@ssb.no","Mons@ssb.no"};
 
 
-            LinkedList<Team> teams = new LinkedList<>();
-            LinkedList<Group> groups = new LinkedList<>();
-            LinkedList<User> users = new LinkedList<>();
+            for(int i = 0; i < teamNameList.length;i++) {
 
+                Team t = Team.builder().uniformTeamName(teamNameList[i]).displayTeamName(teamDisplayNameList[i])
+                        .Groups(Set.of(Group.builder()
+                                .id(teamNameList[i]+groupsPostfixList[i])
+                                .users(Set.of(User.builder().name(names[i]).emailShort(shortEmail[i]).email(longEmail[i])
+                                        .build()))
+                                .build()))
+                        .build();
 
-            Team t = new Team();
-            t.setDisplayTeamName("Demo Enhjoern a");
-            t.setUniformTeamName("demo-enhjoern-a");
+                setup();
+                /*
+                Group g = Group.builder().id(t.getUniformTeamName() + "-support").users(
+                        Set.of(User.builder().name("Donald").emailShort("sh@ssb.no").email("long@ssb.no").build())
+                ).build();
 
-            Group g = new Group();
-            g.setId("demo-enhjoern-a-support");
+                log.info("Preloading" + groupRepository.save(
+                        g
+                ));
 
-            User u = new User();
-            u.setName("Donald");
-            u.setEmailShort("kons-don@ssb.no");
-            u.setEmail("donald.duck@ssb.no");
+                 */
+                log.info("Preloading" + teamRepository.save(
+                        t
+                ));
+            }
 
-            g.setUsers(Set.of(u));
-            log.info(g.getId());
-            t.setGroups(Set.of(g));
-            log.info("Preloading" + groupRepository.save(
-                    g
-            ));
-            log.info("Preloading" + teamRepository.save(
-                    t
-            ));
-
-            t = new Team();
-            t.setDisplayTeamName("Demo Enhjoern b");
-            t.setUniformTeamName("demo-enhjoern-b");
-
-            g = new Group();
-            g.setId("demo-enhjoern-b-support");
-
-            u = new User();
-            u.setName("Mikke");
-            u.setEmailShort("kons-mikke@ssb.no");
-            u.setEmail("mus.mikke@ssb.no");
-
-            g.setUsers(Set.of(u));
-            log.info(g.getId());
-            t.setGroups(Set.of(g));
-            log.info("Preloading" + groupRepository.save(
-                    g
-            ));
-            log.info("Preloading" + teamRepository.save(
-                    t
-            ));
 
 
         };
+    }
+
+    static void setup(){
+
     }
 
 

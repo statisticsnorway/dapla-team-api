@@ -5,6 +5,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import lombok.*;
 import no.ssb.dapla.team.groups.Group;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 import java.util.Set;
 
@@ -20,6 +22,7 @@ public class Team {
     private String displayTeamName;
 
     @OneToMany
+    @Cascade(CascadeType.ALL)
     private Set<Group> Groups;
 
 }

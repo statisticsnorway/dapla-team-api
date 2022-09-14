@@ -1,5 +1,7 @@
 package no.ssb.dapla.team.teams;
 
+import no.ssb.dapla.team.groups.Group;
+import no.ssb.dapla.team.users.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -26,8 +28,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class TeamControllerTest {
 
     private final Map<String, Team> teams = Set.of(
-            Team.builder().uniformTeamName("demo-enhjoern-a").displayTeamName("Demo Enhjørning A").build(),
-            Team.builder().uniformTeamName("demo-enhjoern-b").displayTeamName("Demo Enhjørning B").build()
+            Team.builder().uniformTeamName("demo-enhjoern-a").displayTeamName("Demo Enhjørning A")
+                    .Groups(Set.of(Group.builder()
+                            .id("group_id_test")
+                            .users(Set.of(User.builder().emailShort("test_email_short")
+                                    .build()))
+                            .build()))
+                    .build(),
+            Team.builder().uniformTeamName("demo-enhjoern-b").displayTeamName("Demo Enhjørning B")
+                    .Groups(Set.of(Group.builder()
+                            .id("group_id_test_2")
+                            .users(Set.of(User.builder().emailShort("test_email_short_2")
+                                    .build()))
+                            .build()))
+                    .build()
     ).stream().collect(Collectors.toMap(
             Team::getUniformTeamName, Function.identity()
     ));
@@ -37,6 +51,9 @@ class TeamControllerTest {
 
     @MockBean
     private TeamRepository repository;
+
+    @MockBean
+    private TeamService teamService;
 
     @Test
     void givenTeams_whenListAllTeams_thenReturnHalDocument()
