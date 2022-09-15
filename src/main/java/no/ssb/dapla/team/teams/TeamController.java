@@ -5,10 +5,7 @@ import no.ssb.dapla.team.groups.Group;
 import no.ssb.dapla.team.users.User;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/teams")
@@ -35,6 +32,10 @@ public class TeamController {
     @GetMapping("/{teamName}/groups")
     public CollectionModel<EntityModel<Group>> listGroupsOfSpecificTeam(@PathVariable String teamName) {
         return teamService.listGroupsOfSpecificTeam(teamName);
+    }
+    @PatchMapping("/{teamName}/groups/{groupName}")
+    public EntityModel<User> patchUser(@PathVariable String teamName,@PathVariable String groupName,@RequestBody User user){
+        return teamService.patchUser(teamName,groupName,user);
     }
 
 }

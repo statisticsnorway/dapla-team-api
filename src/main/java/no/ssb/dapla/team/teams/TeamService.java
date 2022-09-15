@@ -15,6 +15,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -74,5 +76,31 @@ public class TeamService {
 
         return CollectionModel.of(resultModel, //
                 linkTo(methodOn(GroupController.class).list()).withSelfRel());
+    }
+
+    //todo adding same user results in     "status": 500,
+    //    "error": "Internal Server Error", check if exists and return
+    public EntityModel<User> patchUser(String teamName, String groupName,User user) {
+        Team team = teamRepository.findById(teamName) //
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Team " + teamName + " does not exist"));
+
+            Group group =team.getGroups().stream()
+                    .filter(groupTemp -> groupTemp.getId().equals(groupName))
+                    .findAny()
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Group " + groupName + " does not exist"));
+
+            Optional<User> optionalUser =group.getUsers().stream()
+                    .filter(userTemp -> userTemp.getEmailShort().equals(user.getEmailShort()))
+                    .findAny();
+
+            if(optionalUser.isPresent())
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "User " + user.getEmailShort() + " already exists");
+            Set<User> users = group.getUsers();
+            users.add(user);
+            group.setUsers(users);
+
+            teamRepository.saveAndFlush(team);
+
+            return userModelAssembler.toModel(user);
     }
 }
