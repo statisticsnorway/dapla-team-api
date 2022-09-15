@@ -23,5 +23,5 @@ public class Group {
     @OneToMany(cascade = CascadeType.MERGE)
     @NotFound(action = NotFoundAction.IGNORE)
     private Set<User> users;
-    
+
 }
