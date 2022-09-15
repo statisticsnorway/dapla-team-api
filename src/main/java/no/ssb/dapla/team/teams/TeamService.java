@@ -1,6 +1,9 @@
 package no.ssb.dapla.team.teams;
 
 import lombok.Data;
+import no.ssb.dapla.team.groups.Group;
+import no.ssb.dapla.team.groups.GroupController;
+import no.ssb.dapla.team.groups.GroupModelAssembler;
 import no.ssb.dapla.team.users.User;
 import no.ssb.dapla.team.users.UserController;
 import no.ssb.dapla.team.users.UserModelAssembler;
@@ -24,6 +27,8 @@ public class TeamService {
     private final TeamModelAssembler assembler;
 
     private final UserModelAssembler userModelAssembler;
+
+    private final GroupModelAssembler groupModelAssembler;
 
     public CollectionModel<EntityModel<Team>> list() {
         List<EntityModel<Team>> teams = teamRepository.findAll().stream() //
@@ -59,5 +64,15 @@ public class TeamService {
 
     }
 
+    public CollectionModel<EntityModel<Group>> listGroupsOfSpecificTeam(String teamName) {
+        Team team = teamRepository.findById(teamName) //
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Team " + teamName + " does not exist"));
 
+        List<EntityModel<Group>> resultModel = team.getGroups().stream()
+                .map(groupModelAssembler::toModel)
+                .toList();
+
+        return CollectionModel.of(resultModel, //
+                linkTo(methodOn(GroupController.class).list()).withSelfRel());
+    }
 }
