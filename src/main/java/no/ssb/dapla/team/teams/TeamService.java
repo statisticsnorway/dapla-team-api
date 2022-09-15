@@ -4,9 +4,7 @@ import lombok.Data;
 import no.ssb.dapla.team.groups.Group;
 import no.ssb.dapla.team.groups.GroupController;
 import no.ssb.dapla.team.groups.GroupModelAssembler;
-import no.ssb.dapla.team.users.User;
-import no.ssb.dapla.team.users.UserController;
-import no.ssb.dapla.team.users.UserModelAssembler;
+import no.ssb.dapla.team.users.*;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
@@ -25,6 +23,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @Service
 public class TeamService {
     private final TeamRepository teamRepository;
+
+    private final UserService userService;
 
     private final TeamModelAssembler assembler;
 
@@ -86,17 +86,34 @@ public class TeamService {
                     .filter(groupTemp -> groupTemp.getId().equals(groupName))
                     .findAny()
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Group " + groupName + " does not exist"));
-
-            Optional<User> optionalUser =group.getUsers().stream()
+        /*
+            Optional<User> optionalUser = group.getUsers().stream()
                     .filter(userTemp -> userTemp.getEmailShort().equals(user.getEmailShort()))
                     .findAny();
-
-            if(optionalUser.isPresent())
-                throw new ResponseStatusException(HttpStatus.CONFLICT, "User " + user.getEmailShort() + " already exists");
+            Optional<User> plainUser = userService.getOptionalUserById(user.getEmailShort());
+            //if(optionalUser.isPresent())
+                //throw new ResponseStatusException(HttpStatus.CONFLICT, "User " + user.getEmailShort() + " already exists");
             Set<User> users = group.getUsers();
-            users.add(user);
-            group.setUsers(users);
 
+
+
+            if(optionalUser.isPresent()){
+                users.add(optionalUser.get());
+            }else{
+                users.add(user);
+                group.setUsers(users);
+            }
+         */
+            Optional<User> optionalUser = userService.getOptionalUserById(user.getEmailShort());
+            if(optionalUser.isPresent()){
+                Set<User> users = group.getUsers();
+                users.add(optionalUser.get());
+                group.setUsers(users);
+            }else{
+                Set<User> users = group.getUsers();
+                users.add(user);
+                group.setUsers(users);
+            }
             teamRepository.saveAndFlush(team);
 
             return userModelAssembler.toModel(user);

@@ -2,6 +2,8 @@ package no.ssb.dapla.team.teams;
 
 import no.ssb.dapla.team.groups.GroupModelAssembler;
 import no.ssb.dapla.team.users.UserModelAssembler;
+import no.ssb.dapla.team.users.UserRepository;
+import no.ssb.dapla.team.users.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -46,6 +48,9 @@ class TeamControllerTest {
 
     @MockBean
     private GroupModelAssembler groupModelAssembler;
+
+    @MockBean
+    private UserService userService;
 
     @Test
     void givenTeams_whenListAllTeams_thenReturnHalDocument()

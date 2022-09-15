@@ -6,7 +6,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import lombok.*;
 import no.ssb.dapla.team.groups.Group;
-import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
@@ -24,7 +23,7 @@ public class Team {
     private String uniformTeamName;
     private String displayTeamName;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "teams")
     @NotFound(action = NotFoundAction.IGNORE)
     private Set<Group> Groups;
 
