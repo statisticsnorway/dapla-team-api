@@ -1,11 +1,9 @@
 package no.ssb.dapla.team.teams;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.*;
 import no.ssb.dapla.team.groups.Group;
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
@@ -20,10 +18,11 @@ import java.util.Set;
 public class Team {
     @Id
     @NonNull
+    @Column(unique = true)
     private String uniformTeamName;
     private String displayTeamName;
 
-    @OneToMany(cascade = CascadeType.MERGE)
+    @OneToMany(cascade = CascadeType.ALL)
     @NotFound(action = NotFoundAction.IGNORE)
     private Set<Group> Groups;
 

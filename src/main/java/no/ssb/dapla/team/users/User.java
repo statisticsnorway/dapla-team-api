@@ -12,6 +12,7 @@ import lombok.*;
 public class User {
     @Id
     @NonNull
+    @Column(unique = true)
     private String emailShort;
     private String name;
     private String email;

@@ -1,6 +1,7 @@
 package no.ssb.dapla.team.teams;
 
 import no.ssb.dapla.team.groups.GroupModelAssembler;
+import no.ssb.dapla.team.groups.GroupService;
 import no.ssb.dapla.team.users.UserModelAssembler;
 import no.ssb.dapla.team.users.UserRepository;
 import no.ssb.dapla.team.users.UserService;
@@ -51,6 +52,9 @@ class TeamControllerTest {
 
     @MockBean
     private UserService userService;
+
+    @MockBean
+    private GroupService groupService;
 
     @Test
     void givenTeams_whenListAllTeams_thenReturnHalDocument()
