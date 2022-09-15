@@ -50,12 +50,6 @@ class TeamControllerTest {
     @MockBean
     private GroupModelAssembler groupModelAssembler;
 
-    @MockBean
-    private UserService userService;
-
-    @MockBean
-    private GroupService groupService;
-
     @Test
     void givenTeams_whenListAllTeams_thenReturnHalDocument()
             throws Exception {

@@ -3,25 +3,21 @@ package no.ssb.dapla.team.groups;
 import jakarta.persistence.*;
 import lombok.*;
 import no.ssb.dapla.team.users.User;
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
-
-import java.util.Set;
+import java.util.List;
 
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "AuthGroup")
+@Entity(name = "AUTH_GROUP")
 public class Group {
     @Id
     @NonNull
     @Column(unique = true)
     private String id;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @NotFound(action = NotFoundAction.IGNORE)
-    private Set<User> users;
+    @ManyToMany(cascade = CascadeType.MERGE)
+    private List<User> users;
 
 }

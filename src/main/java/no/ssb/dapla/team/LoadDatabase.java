@@ -28,36 +28,23 @@ public class LoadDatabase {
             String[] shortEmail = {"Mi@ssb.no", "Do@ssb.no", "Sk@ssb.no","Jo@sbb.no","Mons@ssb.no"};
             String[] longEmail = {"Mikke@ssb.no", "Dolly@sbb.no", "Skrue.no","Jokke@ssb.no","Mons@ssb.no"};
 
-            /*
-            Group g = Group.builder().id("demo-enhjoern-a-support").users(Set.of(
-                    User.builder().name("Nikk").emailShort("nih@ssb.no").email("nikk@ssb.no").build(),
-                    User.builder().name("Harry").emailShort("hah@ssb.no").email("harry@ssb.no").build(),
-                    User.builder().name("Henry").emailShort("hh@ssb.no").email("henry@ssb.no").build()
-            )).build();
-
-            log.info("Preloading" + groupRepository.save(
-                    g
-            ));*/
-
             for(int i = 0; i < teamNameList.length;i++) {
                 Team t = Team.builder()
                         .uniformTeamName(teamNameList[i])
                         .displayTeamName(teamDisplayNameList[i])
-                        .Groups(Set.of(Group.builder()
+                        .groups(List.of(Group.builder()
                                         .id(teamNameList[i]+groupsPostfixList[i])
-                                        .users(Set.of(User.builder()
+                                        .users(List.of(User.builder()
                                                 .name(names[i])
                                                 .emailShort(shortEmail[i])
-                                                .email(longEmail[i]).build()))
+                                                .email(longEmail[i]).build(),User.builder()
+                                                        .name("jens")
+                                                        .emailShort("mann@ssb.no")
+                                                        .email("ads@ssb.no").build()))
                                 .build()))
                         .build();
                 log.info("Preloading" + teamRepository.save(t));
             }
-/*
-
-            teamRepository.save(Team.builder().uniformTeamName("demo-enhjoern-a").displayTeamName("Demo Enhjørning A").build());
-            teamRepository.save(Team.builder().uniformTeamName("demo-enhjoern-b").displayTeamName("Demo Enhjørning B").build());
- */
         };
     }
 }

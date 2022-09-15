@@ -36,7 +36,4 @@ public class UserService {
         return assembler.toModel(user);
     }
 
-    public Optional<User> getOptionalUserById(String id) {
-        return userRepository.findById(id);
-    }
 }

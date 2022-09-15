@@ -8,7 +8,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "SSBUser")
+@Entity(name = "SSB_USER")
 public class User {
     @Id
     @NonNull

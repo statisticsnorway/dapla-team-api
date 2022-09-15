@@ -4,7 +4,6 @@ import lombok.Data;
 import no.ssb.dapla.team.groups.Group;
 import no.ssb.dapla.team.groups.GroupController;
 import no.ssb.dapla.team.groups.GroupModelAssembler;
-import no.ssb.dapla.team.groups.GroupService;
 import no.ssb.dapla.team.users.*;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -15,7 +14,6 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -24,16 +22,10 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @Service
 public class TeamService {
     private final TeamRepository teamRepository;
-
-    private final UserService userService;
-
     private final TeamModelAssembler assembler;
 
     private final UserModelAssembler userModelAssembler;
-
     private final GroupModelAssembler groupModelAssembler;
-
-    private final GroupService groupService;
 
     public CollectionModel<EntityModel<Team>> list() {
         List<EntityModel<Team>> teams = teamRepository.findAll().stream() //
@@ -90,22 +82,16 @@ public class TeamService {
                 .findAny()
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Group " + groupName + " does not exist"));
 
-        Optional<User> optionalUser = userService.getOptionalUserById(user.getEmailShort());
+        Optional<User> optionalUser = group.getUsers().stream()
+                .filter(userTemp -> userTemp.getEmailShort().equals(user.getEmailShort()))
+                .findAny();
 
-        if(optionalUser.isPresent())
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "User " + user.getEmailShort() + " already exists");
-        
-        if(optionalUser.isPresent()){
-            group.getUsers().add(optionalUser.get());
-            groupService.getGroupRepository().delete(group);
-            teamRepository.save(team);
-        }else{
+        if(optionalUser.isEmpty()){
             group.getUsers().add(user);
             teamRepository.saveAndFlush(team);
         }
 
 
-
-            return userModelAssembler.toModel(user);
+        return userModelAssembler.toModel(user);
     }
 }
