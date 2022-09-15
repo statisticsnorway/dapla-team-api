@@ -21,7 +21,7 @@ public class Group {
     @NonNull
     private String id;
 
-    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "groups")
+    @OneToMany(cascade = CascadeType.MERGE)
     @NotFound(action = NotFoundAction.IGNORE)
     private Set<User> users;
 

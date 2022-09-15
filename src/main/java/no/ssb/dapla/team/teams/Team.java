@@ -23,7 +23,7 @@ public class Team {
     private String uniformTeamName;
     private String displayTeamName;
 
-    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "teams")
+    @OneToMany(cascade = CascadeType.MERGE)
     @NotFound(action = NotFoundAction.IGNORE)
     private Set<Group> Groups;
 
