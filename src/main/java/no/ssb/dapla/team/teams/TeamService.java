@@ -77,7 +77,7 @@ public class TeamService {
         return CollectionModel.of(resultModel, //
                 linkTo(methodOn(GroupController.class).list()).withSelfRel());
     }
-    
+
     public EntityModel<User> patchUser(String teamName, String groupName,User user) {
         Team team = teamRepository.findById(teamName) //
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Team " + teamName + " does not exist"));
