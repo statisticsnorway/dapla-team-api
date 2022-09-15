@@ -3,8 +3,7 @@ package no.ssb.dapla.team.groups;
 import jakarta.persistence.*;
 import lombok.*;
 import no.ssb.dapla.team.users.User;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
+import jakarta.persistence.CascadeType;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
@@ -21,8 +20,7 @@ public class Group {
     @NonNull
     private String id;
 
-    @OneToMany
-    @Cascade(CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     @NotFound(action = NotFoundAction.IGNORE)
     private Set<User> users;
 
