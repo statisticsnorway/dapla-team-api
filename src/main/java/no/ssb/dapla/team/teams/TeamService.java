@@ -4,6 +4,7 @@ import lombok.Data;
 import no.ssb.dapla.team.groups.Group;
 import no.ssb.dapla.team.groups.GroupController;
 import no.ssb.dapla.team.groups.GroupModelAssembler;
+import no.ssb.dapla.team.groups.GroupService;
 import no.ssb.dapla.team.users.*;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -31,6 +32,8 @@ public class TeamService {
     private final UserModelAssembler userModelAssembler;
 
     private final GroupModelAssembler groupModelAssembler;
+
+    private final GroupService groupService;
 
     public CollectionModel<EntityModel<Team>> list() {
         List<EntityModel<Team>> teams = teamRepository.findAll().stream() //
@@ -82,39 +85,26 @@ public class TeamService {
         Team team = teamRepository.findById(teamName) //
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Team " + teamName + " does not exist"));
 
-            Group group =team.getGroups().stream()
-                    .filter(groupTemp -> groupTemp.getId().equals(groupName))
-                    .findAny()
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Group " + groupName + " does not exist"));
-        /*
-            Optional<User> optionalUser = group.getUsers().stream()
-                    .filter(userTemp -> userTemp.getEmailShort().equals(user.getEmailShort()))
-                    .findAny();
-            Optional<User> plainUser = userService.getOptionalUserById(user.getEmailShort());
-            //if(optionalUser.isPresent())
-                //throw new ResponseStatusException(HttpStatus.CONFLICT, "User " + user.getEmailShort() + " already exists");
-            Set<User> users = group.getUsers();
+        Group group =team.getGroups().stream()
+                .filter(groupTemp -> groupTemp.getId().equals(groupName))
+                .findAny()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Group " + groupName + " does not exist"));
 
+        Optional<User> optionalUser = userService.getOptionalUserById(user.getEmailShort());
 
-
-            if(optionalUser.isPresent()){
-                users.add(optionalUser.get());
-            }else{
-                users.add(user);
-                group.setUsers(users);
-            }
-         */
-            Optional<User> optionalUser = userService.getOptionalUserById(user.getEmailShort());
-            if(optionalUser.isPresent()){
-                Set<User> users = group.getUsers();
-                users.add(optionalUser.get());
-                group.setUsers(users);
-            }else{
-                Set<User> users = group.getUsers();
-                users.add(user);
-                group.setUsers(users);
-            }
+        if(optionalUser.isPresent())
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "User " + user.getEmailShort() + " already exists");
+        
+        if(optionalUser.isPresent()){
+            group.getUsers().add(optionalUser.get());
+            groupService.getGroupRepository().delete(group);
+            teamRepository.save(team);
+        }else{
+            group.getUsers().add(user);
             teamRepository.saveAndFlush(team);
+        }
+
+
 
             return userModelAssembler.toModel(user);
     }
