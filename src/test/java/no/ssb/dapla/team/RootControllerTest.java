@@ -1,6 +1,5 @@
-package no.ssb.dapla.team.teams;
+package no.ssb.dapla.team;
 
-import no.ssb.dapla.team.RootController;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

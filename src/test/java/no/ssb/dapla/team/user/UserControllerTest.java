@@ -1,4 +1,4 @@
-package no.ssb.dapla.team.teams;
+package no.ssb.dapla.team.user;
 
 import no.ssb.dapla.team.users.*;
 import org.junit.jupiter.api.Test;
