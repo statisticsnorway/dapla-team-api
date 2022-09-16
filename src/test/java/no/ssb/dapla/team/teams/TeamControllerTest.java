@@ -1,5 +1,7 @@
 package no.ssb.dapla.team.teams;
 
+import no.ssb.dapla.team.groups.GroupModelAssembler;
+import no.ssb.dapla.team.users.UserModelAssembler;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -11,9 +13,9 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.BDDMockito.given;
@@ -22,15 +24,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(TeamController.class)
-@Import({ TeamModelAssembler.class })
+@Import({TeamModelAssembler.class})
 class TeamControllerTest {
 
-    private final Map<String, Team> teams = Set.of(
+    private final Map<String, Team> teams = Stream.of(
             Team.builder().uniformTeamName("demo-enhjoern-a").displayTeamName("Demo Enhjørning A").build(),
             Team.builder().uniformTeamName("demo-enhjoern-b").displayTeamName("Demo Enhjørning B").build()
-    ).stream().collect(Collectors.toMap(
+    ).collect(Collectors.toMap(
             Team::getUniformTeamName, Function.identity()
     ));
+
 
     @Autowired
     private MockMvc mvc;
@@ -38,10 +41,15 @@ class TeamControllerTest {
     @MockBean
     private TeamRepository repository;
 
+    @MockBean
+    private UserModelAssembler userModelAssembler;
+
+    @MockBean
+    private GroupModelAssembler groupModelAssembler;
+
     @Test
     void givenTeams_whenListAllTeams_thenReturnHalDocument()
             throws Exception {
-
         given(repository.findAll()).willReturn(
                 new ArrayList<>(teams.values()));
 

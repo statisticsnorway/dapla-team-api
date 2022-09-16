@@ -1,7 +1,5 @@
 package no.ssb.dapla.team.users;
 
-import no.ssb.dapla.team.teams.Team;
-import no.ssb.dapla.team.teams.TeamController;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
@@ -15,6 +13,6 @@ public class UserModelAssembler implements RepresentationModelAssembler<User, En
     public EntityModel<User> toModel(User user) {
 
         return EntityModel.of(user, //
-                linkTo(methodOn(TeamController.class).getById(user.getEmailShort())).withSelfRel());
+                linkTo(methodOn(UserController.class).getById(user.getEmailShort())).withSelfRel());
     }
 }
