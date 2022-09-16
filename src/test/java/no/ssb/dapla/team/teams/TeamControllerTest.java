@@ -1,10 +1,7 @@
 package no.ssb.dapla.team.teams;
 
 import no.ssb.dapla.team.groups.GroupModelAssembler;
-import no.ssb.dapla.team.groups.GroupService;
 import no.ssb.dapla.team.users.UserModelAssembler;
-import no.ssb.dapla.team.users.UserRepository;
-import no.ssb.dapla.team.users.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -27,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(TeamController.class)
-@Import({ TeamModelAssembler.class, TeamService.class})
+@Import({TeamModelAssembler.class})
 class TeamControllerTest {
 
     private final Map<String, Team> teams = Stream.of(

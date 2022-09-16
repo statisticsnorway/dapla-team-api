@@ -1,6 +1,10 @@
 package no.ssb.dapla.team.group;
 
-import no.ssb.dapla.team.groups.*;
+import no.ssb.dapla.team.groups.Group;
+import no.ssb.dapla.team.groups.GroupController;
+import no.ssb.dapla.team.groups.GroupModelAssembler;
+import no.ssb.dapla.team.groups.GroupRepository;
+import no.ssb.dapla.team.users.UserModelAssembler;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -23,15 +27,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(GroupController.class)
-@Import({ GroupModelAssembler.class, GroupService.class})
+@Import({GroupModelAssembler.class})
 class GroupControllerTest {
 
-    private final Map<String, Group> groups = Stream.of(
-            Group.builder().id("demo-enhjoern-a-support").build(),
-            Group.builder().id("demo-enhjoern-b-support").build()
-    ).collect(Collectors.toMap(
-            Group::getId, Function.identity()
-    ));
+    private final Map<String, Group> groups = Stream.of(Group.builder()
+                            .id("demo-enhjoern-a-support").build(),
+                    Group.builder().id("demo-enhjoern-b-support").build())
+            .collect(Collectors.toMap(Group::getId, Function.identity()));
 
 
     @Autowired
@@ -40,20 +42,14 @@ class GroupControllerTest {
     @MockBean
     private GroupRepository repository;
 
+    @MockBean
+    private UserModelAssembler userModelAssembler;
+
     @Test
-    void givenGroups_whenListAllGroups_thenReturnHalDocument()
-            throws Exception {
-        given(repository.findAll()).willReturn(
-                new ArrayList<>(groups.values()));
+    void givenGroups_whenListAllGroups_thenReturnHalDocument() throws Exception {
+        given(repository.findAll()).willReturn(new ArrayList<>(groups.values()));
 
         mvc.perform(get("/groups").accept(MediaTypes.HAL_JSON_VALUE)) //
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_VALUE))
-                .andExpect(jsonPath("$._embedded.groupList[0].id", is("demo-enhjoern-b-support")))
-                .andExpect(jsonPath("$._embedded.groupList[0]._links.self.href", is("http://localhost/groups/demo-enhjoern-b-support")))
-                .andExpect(jsonPath("$._embedded.groupList[1].id", is("demo-enhjoern-a-support")))
-                .andExpect(jsonPath("$._embedded.groupList[1]._links.self.href", is("http://localhost/groups/demo-enhjoern-a-support")))
-                .andReturn();
+                .andDo(print()).andExpect(status().isOk()).andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_VALUE)).andExpect(jsonPath("$._embedded.groupList[0].id", is("demo-enhjoern-b-support"))).andExpect(jsonPath("$._embedded.groupList[0]._links.self.href", is("http://localhost/groups/demo-enhjoern-b-support"))).andExpect(jsonPath("$._embedded.groupList[1].id", is("demo-enhjoern-a-support"))).andExpect(jsonPath("$._embedded.groupList[1]._links.self.href", is("http://localhost/groups/demo-enhjoern-a-support"))).andReturn();
     }
 }

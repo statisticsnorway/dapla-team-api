@@ -3,6 +3,7 @@ package no.ssb.dapla.team.teams;
 import jakarta.persistence.*;
 import lombok.*;
 import no.ssb.dapla.team.groups.Group;
+
 import java.util.List;
 
 @Getter
