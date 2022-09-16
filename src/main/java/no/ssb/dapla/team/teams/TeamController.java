@@ -5,6 +5,7 @@ import no.ssb.dapla.team.groups.Group;
 import no.ssb.dapla.team.users.User;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -33,6 +34,7 @@ public class TeamController {
     public CollectionModel<EntityModel<Group>> listGroupsOfSpecificTeam(@PathVariable String teamName) {
         return teamService.listGroupsOfSpecificTeam(teamName);
     }
+    @ResponseStatus(code = HttpStatus.CREATED)
     @PatchMapping("/{teamName}/groups/{groupName}")
     public EntityModel<User> patchUser(@PathVariable String teamName,@PathVariable String groupName,@RequestBody User user){
         return teamService.patchUser(teamName,groupName,user);
