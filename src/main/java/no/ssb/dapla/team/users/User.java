@@ -1,6 +1,8 @@
 package no.ssb.dapla.team.users;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.*;
 
 @Getter
@@ -8,7 +10,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "SSB_USER")
+@Entity(name = "AdUser")
 public class User {
     @Id
     @NonNull

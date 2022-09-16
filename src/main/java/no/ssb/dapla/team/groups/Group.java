@@ -3,6 +3,7 @@ package no.ssb.dapla.team.groups;
 import jakarta.persistence.*;
 import lombok.*;
 import no.ssb.dapla.team.users.User;
+
 import java.util.List;
 
 @Getter
@@ -10,7 +11,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "AUTH_GROUP")
+@Entity(name = "AuthGroup")
 public class Group {
     @Id
     @NonNull
