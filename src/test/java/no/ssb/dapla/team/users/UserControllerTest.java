@@ -1,4 +1,4 @@
-package no.ssb.dapla.team.user;
+package no.ssb.dapla.team.users;
 
 import no.ssb.dapla.team.users.User;
 import no.ssb.dapla.team.users.UserController;
