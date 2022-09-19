@@ -1,6 +1,7 @@
 package no.ssb.dapla.team;
 
 import no.ssb.dapla.team.teams.TeamController;
+import no.ssb.dapla.team.users.UserController;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +20,7 @@ public class RootController {
 
         model.add(linkTo(methodOn(RootController.class).root()).withSelfRel());
         model.add(linkTo(methodOn(TeamController.class).list()).withRel("teams"));
-        model.add(linkTo(methodOn(TeamController.class).list()).withRel("users"));
+        model.add(linkTo(methodOn(UserController.class).list()).withRel("users"));
 
         return ResponseEntity.ok(model);
     }

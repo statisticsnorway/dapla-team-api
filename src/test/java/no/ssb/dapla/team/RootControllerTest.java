@@ -28,7 +28,7 @@ public class RootControllerTest {
                 .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaTypes.HAL_JSON_VALUE))
                 .andExpect(jsonPath("$._links.self.href", is("http://localhost/")))
                 .andExpect(jsonPath("$._links.teams.href", is("http://localhost/teams")))
-                .andExpect(jsonPath("$._links.groups.href", is("http://localhost/groups")))
+                .andExpect(jsonPath("$._links.users.href", is("http://localhost/users")))
                 .andReturn();
 
     }
