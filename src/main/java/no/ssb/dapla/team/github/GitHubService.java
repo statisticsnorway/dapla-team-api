@@ -61,7 +61,7 @@ public class GitHubService {
         try {
             if (ghAppInstallationToken.getExpiresAt().before(new Date())) {
 
-                String jwtToken = this.createJWT(appId, privateKeyPath); //sdk-github-api-app-test
+                String jwtToken = this.createJWT(appId, privateKeyPath);
                 GitHub gitHubApp = new GitHubBuilder().withJwtToken(jwtToken).build();
 
 
