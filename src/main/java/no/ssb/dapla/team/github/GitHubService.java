@@ -100,7 +100,6 @@ public class GitHubService {
         return repositoryList;
     }
 
-
     public List<GHRepository> getRepositoryInOrganizationWithNameContaining(String containing) {
         updateTokenIfExpired();
         List<GHRepository> repositoryList;
