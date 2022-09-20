@@ -34,9 +34,9 @@ public class GitHubService {
     private GHAppInstallationToken ghAppInstallationToken;
 
 
-    public GitHubService(@NonNull @Value("${app.id}") String appId,
-                         @NonNull @Value("${github.pk.path}") String privateKeyPath,
-                         @NonNull @Value("${app.organization}") String organizationName) {
+    public GitHubService(@NonNull @Value("${github.id}") String appId,
+                         @NonNull @Value("${github.privatekey}") String privateKeyPath,
+                         @NonNull @Value("${github.organization}") String organizationName) {
 
         this.organizationName = organizationName;
         this.appId = appId;
@@ -45,7 +45,7 @@ public class GitHubService {
         try {
             String jwtToken = this.createJWT(appId, privateKeyPath);
             GitHub gitHubApp = new GitHubBuilder().withJwtToken(jwtToken).build();
-            
+
             GHAppInstallation appInstallation = gitHubApp.getApp().getInstallationByOrganization(organizationName);
             ghAppInstallationToken = appInstallation.createToken().create();
             GitHub githubAuthAsInst = new GitHubBuilder().withAppInstallationToken(ghAppInstallationToken.getToken()).build();
