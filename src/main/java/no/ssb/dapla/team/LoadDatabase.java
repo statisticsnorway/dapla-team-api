@@ -1,6 +1,7 @@
 package no.ssb.dapla.team;
 
 import lombok.extern.slf4j.Slf4j;
+import no.ssb.dapla.team.github.GitHubService;
 import no.ssb.dapla.team.groups.Group;
 import no.ssb.dapla.team.teams.Team;
 import no.ssb.dapla.team.teams.TeamRepository;
@@ -17,7 +18,7 @@ import java.util.List;
 @Slf4j
 public class LoadDatabase {
     @Bean
-    CommandLineRunner initDatabase(UserRepository userRepository, TeamRepository teamRepository, FilebasedUserService filebasedUserService) {
+    CommandLineRunner initDatabase(UserRepository userRepository, TeamRepository teamRepository, FilebasedUserService filebasedUserService, GitHubService gitHubService) {
 
         return args -> {
             // Users
@@ -25,8 +26,9 @@ public class LoadDatabase {
             userRepository.saveAll(users);
 
             // Teams
-            teamRepository.save(teamWithGroupsAndMembers("demo-enhjoern-a", "Demo Enhjørning A", users.subList(0, 5)));
-            teamRepository.save(teamWithGroupsAndMembers("demo-enhjoern-b", "Demo Enhjørning B", users.subList(5, 10)));
+            //teamRepository.save(teamWithGroupsAndMembers("demo-enhjoern-a", "Demo Enhjørning A", users.subList(0, 5)));
+            //teamRepository.save(teamWithGroupsAndMembers("demo-enhjoern-b", "Demo Enhjørning B", users.subList(5, 10)));
+            teamRepository.saveAll(gitHubService.getRepositoryInOrganizationWithTopic("dapla-team"));
         };
     }
 
