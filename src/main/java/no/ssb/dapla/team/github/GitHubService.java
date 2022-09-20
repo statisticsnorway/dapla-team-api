@@ -45,8 +45,7 @@ public class GitHubService {
         try {
             String jwtToken = this.createJWT(appId, privateKeyPath);
             GitHub gitHubApp = new GitHubBuilder().withJwtToken(jwtToken).build();
-
-
+            
             GHAppInstallation appInstallation = gitHubApp.getApp().getInstallationByOrganization(organizationName);
             ghAppInstallationToken = appInstallation.createToken().create();
             GitHub githubAuthAsInst = new GitHubBuilder().withAppInstallationToken(ghAppInstallationToken.getToken()).build();
