@@ -107,7 +107,8 @@ public class GitHubService {
             repositoryList = ghOrganization.getRepositories()
                     .values()
                     .stream()
-                    .filter(ghRepository -> ghRepository.getName().contains(containing)).toList();
+                    .filter(ghRepository -> ghRepository.getName().contains(containing))
+                    .toList();
 
 
         } catch (IOException e) {
