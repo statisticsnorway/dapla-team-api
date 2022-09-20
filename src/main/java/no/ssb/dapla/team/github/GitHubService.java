@@ -86,7 +86,7 @@ public class GitHubService {
                     if (tempTopic.equals(topic)) {
                         repositoryList.add(Team.builder().
                                 uniformTeamName(ghRepository.getName())
-                                .uniformTeamName(ghRepository.getName().replace("-", " "))
+                                .displayTeamName(ghRepository.getName().replace("-", " "))
                                 .build());
                         break;
                     }
