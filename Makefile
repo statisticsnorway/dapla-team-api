@@ -28,11 +28,14 @@ release: ## Release a new version. Update POMs and tag the new version in git
 run-local: ## Run the app locally (without docker)
 	java -jar  target/dapla-team-api-*.jar
 
+.PHONY: create-azure-app-certificate
+create-azure-app-certificate: ## Create an Azure AD Application certificate
+	bin/create-azure-app-certificate.sh
+
+.PHONY: create-azure-app-sealedsecret
+create-azure-app-sealedsecret: ## Create the Azure AD Application sealed secret
+	bin/create-azure-app-sealedsecret.sh
+
 .PHONY: create-github-app-sealedsecret
-create-github-app-sealedsecret: ## Create the GitHub app sealed secret
-	kubectl create secret generic dapla-team-api-github-app \
-  	-n dapla \
-	--dry-run=client \
-	--from-file=${github_app_private_key_location} \
-	--from-literal=ssb-dapla-team-api-client-secret=${github_app_client_secret} \
-	-o yaml | kubeseal --format=yaml --cert ${platform_dev_location}/certs/${env}-bip-app.crt > dapla-team-api-github-app-sealedsecret.yaml
+create-github-app-sealedsecret: ## Create the GitHub Application sealed secret
+	bin/create-github-app-sealedsecret.sh
