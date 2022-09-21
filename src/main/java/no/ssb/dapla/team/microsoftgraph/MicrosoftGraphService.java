@@ -66,9 +66,9 @@ public class MicrosoftGraphService {
         return future.get();
     }
 
-    private String getUsersListFromGraph(String accessToken) throws Exception {
+    private String getUsersListFromGraph() throws Exception {
 
-        String acsessToken = getAccessTokenByClientCredentialGrant().accessToken();
+        String accessToken = getAccessTokenByClientCredentialGrant().accessToken();
 
         URL url = new URL("https://graph.microsoft.com/v1.0/groups");
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
