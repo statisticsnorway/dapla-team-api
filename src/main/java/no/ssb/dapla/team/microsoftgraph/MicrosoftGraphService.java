@@ -37,13 +37,13 @@ public class MicrosoftGraphService {
     private final String scopeUrl;
     private ConfidentialClientApplication confidentialClientApplication;
 
-    public MicrosoftGraphService(@NonNull @Value("${msgraph.authority.url}") String authorityUrl,
-                                 @NonNull @Value("${msgraph.client.id}") String clientId,
-                                 @NonNull @Value("${msgraph.privatekey.path}") String keyPath,
-                                 @NonNull @Value("${msgraph.cert.path}") String certPath,
-                                 @NonNull @Value("${msgraph.scope.url}") String scopeUrl) {
+    public MicrosoftGraphService(@NonNull @Value("${ad.app.client.id}") String clientId,
+                                 @NonNull @Value("${ad.app.tenant.id}") String tenantId,
+                                 @NonNull @Value("${ad.app.privatekey.file}") String keyPath,
+                                 @NonNull @Value("${ad.app.certificate.file}") String certPath) {
 
-        this.scopeUrl = scopeUrl;
+        this.scopeUrl = "https://graph.microsoft.com/.default";
+        String authorityUrl = "https://login.microsoftonline.com/" + tenantId +"/";
 
         try {
             PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(Files.readAllBytes(Paths.get(keyPath)));
