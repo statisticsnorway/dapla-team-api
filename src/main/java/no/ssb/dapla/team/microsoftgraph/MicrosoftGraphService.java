@@ -8,6 +8,7 @@ import com.microsoft.aad.msal4j.IAuthenticationResult;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -22,6 +23,7 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Collections;
 import java.util.concurrent.CompletableFuture;
 
+@Service
 public class MicrosoftGraphService {
 
     private final String scopeUrl;
