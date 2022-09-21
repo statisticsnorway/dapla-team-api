@@ -12,6 +12,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.io.IOException;
 import java.util.List;
 
 @Configuration
@@ -28,7 +29,11 @@ public class LoadDatabase {
             // Teams
             //teamRepository.save(teamWithGroupsAndMembers("demo-enhjoern-a", "Demo Enhjørning A", users.subList(0, 5)));
             //teamRepository.save(teamWithGroupsAndMembers("demo-enhjoern-b", "Demo Enhjørning B", users.subList(5, 10)));
-            teamRepository.saveAll(gitHubService.getRepositoryInOrganizationWithTopic("dapla-team"));
+            try {
+                teamRepository.saveAll(gitHubService.getRepositoryInOrganizationWithTopic("dapla-team"));
+            }catch (Exception e){
+                new RuntimeException("Could not load teams with github service");
+            }
         };
     }
 

@@ -76,10 +76,9 @@ public class GitHubService {
         }
     }
 
-    public List<Team> getRepositoryInOrganizationWithTopic(String topic) {
+    public List<Team> getRepositoryInOrganizationWithTopic(String topic) throws Exception {
         updateTokenIfExpired();
         LinkedList<Team> repositoryList = new LinkedList<>();
-        try {
             for (GHRepository ghRepository : ghOrganization.getRepositories().values()) {
                 for (String tempTopic : ghRepository.listTopics()) {
                     if (tempTopic.equals(topic)) {
@@ -93,9 +92,6 @@ public class GitHubService {
                 }
             }
 
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to get organizations repositories containing: " + topic);
-        }
         return repositoryList;
     }
 
