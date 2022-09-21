@@ -34,8 +34,8 @@ public class GitHubService {
     private GHAppInstallationToken ghAppInstallationToken;
 
 
-    public GitHubService(@NonNull @Value("${github.id}") String appId,
-                         @NonNull @Value("${github.privatekey}") String privateKeyPath,
+    public GitHubService(@NonNull @Value("${github.app.id}") String appId,
+                         @NonNull @Value("${github.app.privatekey.file}") String privateKeyPath,
                          @NonNull @Value("${github.organization}") String organizationName) {
 
         this.organizationName = organizationName;
