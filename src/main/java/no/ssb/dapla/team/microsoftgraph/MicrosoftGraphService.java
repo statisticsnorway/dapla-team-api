@@ -1,12 +1,19 @@
 package no.ssb.dapla.team.microsoftgraph;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microsoft.aad.msal4j.ClientCredentialFactory;
 import com.microsoft.aad.msal4j.ClientCredentialParameters;
 import com.microsoft.aad.msal4j.ConfidentialClientApplication;
 import com.microsoft.aad.msal4j.IAuthenticationResult;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
+import com.univocity.parsers.annotations.Parsed;
+import lombok.Data;
 import lombok.NonNull;
+import no.ssb.dapla.team.teams.Team;
+import no.ssb.dapla.team.users.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +28,7 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -29,11 +37,11 @@ public class MicrosoftGraphService {
     private final String scopeUrl;
     private ConfidentialClientApplication confidentialClientApplication;
 
-    public MicrosoftGraphService(@NonNull @Value("${msgraph.authority}") String authorityUrl,
-                                 @NonNull @Value("${msgraph.client_id}") String clientId,
-                                 @NonNull @Value("${msgraph.key_path}") String keyPath,
-                                 @NonNull @Value("${msgraph.cert_path}") String certPath,
-                                 @NonNull @Value("${msgraph.cert_path}") String scopeUrl) {
+    public MicrosoftGraphService(@NonNull @Value("${msgraph.authority.url}") String authorityUrl,
+                                 @NonNull @Value("${msgraph.client.id}") String clientId,
+                                 @NonNull @Value("${msgraph.privatekey.path}") String keyPath,
+                                 @NonNull @Value("${msgraph.cert.path}") String certPath,
+                                 @NonNull @Value("${msgraph.scope.url}") String scopeUrl) {
 
         this.scopeUrl = scopeUrl;
 
@@ -68,7 +76,7 @@ public class MicrosoftGraphService {
         return future.get();
     }
 
-    private String getUsersListFromGraph() throws Exception {
+    private String getJsonTeamListFromGraph() throws Exception {
 
         String accessToken = getAccessTokenByClientCredentialGrant().accessToken();
 
@@ -98,6 +106,31 @@ public class MicrosoftGraphService {
                     httpResponseCode, conn.getResponseMessage());
         }
 
+    }
+
+    public AdGroup getAdGroupFromGraph(String jsonString) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(DeserializationFeature.ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT, false);
+        AdGroup adGroup = objectMapper.readValue(jsonString, AdGroup.class);
+        return adGroup;
+    }
+
+    public List<AdGroup> getAdGroupListFromGraph(){
+
+        return null;
+    }
+
+
+    @Data
+    public static class AdGroup{
+        private String id;
+        private List<AdUser> adUsers;
+    }
+    @Data
+    public static class AdUser {
+        private String emailShort;
+        private String name;
+        private String email;
     }
 
 
