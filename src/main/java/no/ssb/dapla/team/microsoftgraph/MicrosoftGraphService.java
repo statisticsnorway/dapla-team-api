@@ -9,11 +9,8 @@ import com.microsoft.aad.msal4j.ClientCredentialParameters;
 import com.microsoft.aad.msal4j.ConfidentialClientApplication;
 import com.microsoft.aad.msal4j.IAuthenticationResult;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
-import com.univocity.parsers.annotations.Parsed;
 import lombok.Data;
 import lombok.NonNull;
-import no.ssb.dapla.team.teams.Team;
-import no.ssb.dapla.team.users.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -43,8 +40,8 @@ public class MicrosoftGraphService {
                                  @NonNull @Value("${ad.app.certificate.file}") String certPath) {
 
         this.scopeUrl = "https://graph.microsoft.com/.default";
-        String authorityUrl = "https://login.microsoftonline.com/" + tenantId +"/";
-
+        String authorityUrl = "https://login.microsoftonline.com/" + tenantId + "/";
+        //Try catch så den ikke skal crashe poden
         try {
             PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(Files.readAllBytes(Paths.get(keyPath)));
             PrivateKey key = KeyFactory.getInstance("RSA").generatePrivate(spec);
@@ -58,9 +55,8 @@ public class MicrosoftGraphService {
                             ClientCredentialFactory.createFromCertificate(keyPathInputStream, certPath))
                     .authority(authorityUrl)
                     .build();
-
         } catch (Exception e) {
-            new RuntimeException("Could not create instance of MicrosoftGraphService");
+            new RuntimeException("Could not setup MicrosoftGraphService");
         }
 
     }
@@ -76,7 +72,7 @@ public class MicrosoftGraphService {
         return future.get();
     }
 
-    private String getJsonTeamListFromGraph() throws Exception {
+    public String getJsonTeamListFromGraph() throws Exception {
 
         String accessToken = getAccessTokenByClientCredentialGrant().accessToken();
 
@@ -85,18 +81,18 @@ public class MicrosoftGraphService {
 
         conn.setRequestMethod("GET");
         conn.setRequestProperty("Authorization", "Bearer " + accessToken);
-        conn.setRequestProperty("Accept","application/json");
+        conn.setRequestProperty("Accept", "application/json");
 
         int httpResponseCode = conn.getResponseCode();
-        if(httpResponseCode == HTTPResponse.SC_OK) {
+        if (httpResponseCode == HTTPResponse.SC_OK) {
 
             StringBuilder response;
-            try(BufferedReader in = new BufferedReader(
-                    new InputStreamReader(conn.getInputStream()))){
+            try (BufferedReader in = new BufferedReader(
+                    new InputStreamReader(conn.getInputStream()))) {
 
                 String inputLine;
                 response = new StringBuilder();
-                while (( inputLine = in.readLine()) != null) {
+                while ((inputLine = in.readLine()) != null) {
                     response.append(inputLine);
                 }
             }
@@ -115,17 +111,18 @@ public class MicrosoftGraphService {
         return adGroup;
     }
 
-    public List<AdGroup> getAdGroupListFromGraph(){
+    public List<AdGroup> getAdGroupListFromGraph() {
 
         return null;
     }
 
 
     @Data
-    public static class AdGroup{
+    public static class AdGroup {
         private String id;
         private List<AdUser> adUsers;
     }
+
     @Data
     public static class AdUser {
         private String emailShort;
