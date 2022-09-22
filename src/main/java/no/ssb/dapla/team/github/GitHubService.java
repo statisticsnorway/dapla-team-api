@@ -111,9 +111,9 @@ public class GitHubService {
         return githubSearchResult
                 .getItems()
                 .stream()
-                .map(adTeam -> new Team(adTeam.getRepoName(),
-                        adTeam.getFullRepoName(),
-                        adTeam.getRepoName()))
+                .map(adTeam -> new Team(adTeam.getRepoName().replace("-iac",""),
+                        adTeam.getRepoName().replace("-iac",""),
+                        adTeam.getFullRepoName()))
                 .toList();
     }
 
