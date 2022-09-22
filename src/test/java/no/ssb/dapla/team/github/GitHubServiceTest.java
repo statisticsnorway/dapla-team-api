@@ -22,7 +22,7 @@ public class GitHubServiceTest {
     }
 
     @Test
-    void getTeamListWithTopicUsingApi() throws Exception {
+    void getTeamListWithTopicUsingGitHubApi() throws Exception {
         assertThat(gitHubService.getTeamListWithTopic("terraform"))
                 .isNotEmpty();
     }
