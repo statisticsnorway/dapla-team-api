@@ -18,7 +18,7 @@ public class Team {
     @Column(unique = true)
     private String uniformTeamName;
     private String displayTeamName;
-
+    private String repo;
 
     @OneToMany(cascade = CascadeType.MERGE)
     private List<Group> groups;
