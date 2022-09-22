@@ -1,28 +1,27 @@
 package no.ssb.dapla.team.github;
 
-import io.jsonwebtoken.JwtBuilder;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nimbusds.oauth2.sdk.http.HTTPResponse;
+import lombok.Data;
 import lombok.NonNull;
 import no.ssb.dapla.team.teams.Team;
 import org.kohsuke.github.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.security.Key;
-import java.security.KeyFactory;
-import java.security.PrivateKey;
-import java.security.spec.PKCS8EncodedKeySpec;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 
 @Service
 public class GitHubService {
-    private final long jwtExpirationTimeInMS = 1000;
+    private final long jwtExpirationTimeInMS = 600000;
 
     private final String appId;
 
@@ -43,7 +42,7 @@ public class GitHubService {
         this.privateKeyPath = privateKeyPath;
 
         try {
-            String jwtToken = this.createJWT(appId, privateKeyPath);
+            String jwtToken = GitHubUtils.createJWT(appId, privateKeyPath, jwtExpirationTimeInMS);
             GitHub gitHubApp = new GitHubBuilder().withJwtToken(jwtToken).build();
 
             GHAppInstallation appInstallation = gitHubApp.getApp().getInstallationByOrganization(organizationName);
@@ -61,7 +60,7 @@ public class GitHubService {
         try {
             if (ghAppInstallationToken.getExpiresAt().before(new Date())) {
 
-                String jwtToken = this.createJWT(appId, privateKeyPath);
+                String jwtToken = GitHubUtils.createJWT(appId, privateKeyPath, jwtExpirationTimeInMS);
                 GitHub gitHubApp = new GitHubBuilder().withJwtToken(jwtToken).build();
 
 
@@ -76,23 +75,48 @@ public class GitHubService {
         }
     }
 
-    public List<Team> getRepositoryInOrganizationWithTopic(String topic) throws Exception {
-        updateTokenIfExpired();
-        LinkedList<Team> repositoryList = new LinkedList<>();
-            for (GHRepository ghRepository : ghOrganization.getRepositories().values()) {
-                for (String tempTopic : ghRepository.listTopics()) {
-                    if (tempTopic.equals(topic)) {
-                        repositoryList.add(Team.builder().
-                                uniformTeamName(ghRepository.getName())
-                                .displayTeamName(ghRepository.getName().replace("-", " "))
-                                .build());
-                        break;
-                    }
+    public String getRepositoryInOrganizationWithTopicAsJson(String topic) throws Exception {
 
+        String accessToken = ghAppInstallationToken.getToken();
+        URL url = new URL("https://api.github.com/search/repositories?q=org:statisticsnorway+" + topic);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+        conn.setRequestMethod("GET");
+        conn.setRequestProperty("Authorization", "bearer " + accessToken);
+        conn.setRequestProperty("Accept", "application/json");
+
+        int httpResponseCode = conn.getResponseCode();
+        if (httpResponseCode == HTTPResponse.SC_OK) {
+
+            StringBuilder response;
+            try (BufferedReader in = new BufferedReader(
+                    new InputStreamReader(conn.getInputStream()))) {
+
+                String inputLine;
+                response = new StringBuilder();
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
                 }
             }
+            return response.toString();
+        } else {
+            return String.format("Connection returned HTTP code: %s with message: %s",
+                    httpResponseCode, conn.getResponseMessage());
+        }
+    }
 
-        return repositoryList;
+    public List<Team> getTeamListWithTopic(String topic) throws Exception {
+        GithubSearchResult githubSearchResult = new ObjectMapper().readValue(getRepositoryInOrganizationWithTopicAsJson(topic), GithubSearchResult.class);
+
+        return githubSearchResult
+                .getItems()
+                .stream()
+                .map(adTeam ->
+                        Team.builder()
+                                .uniformTeamName(adTeam.getRepoName())
+                                .displayTeamName(adTeam.fullRepoName)
+                                .build())
+                .toList();
     }
 
     public List<GHRepository> getRepositoryInOrganizationWithNameContaining(String containing) {
@@ -113,32 +137,22 @@ public class GitHubService {
         return repositoryList;
     }
 
-    private PrivateKey getPrivateKey(String filename) throws Exception {
-        byte[] keyBytes = Files.readAllBytes(Paths.get(filename));
-
-        PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
-        KeyFactory kf = KeyFactory.getInstance("RSA");
-        return kf.generatePrivate(spec);
+    @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    static class AdTeam {
+        @JsonProperty("name")
+        private String repoName;
+        @JsonProperty("full_name")
+        private String fullRepoName;
     }
 
-    private String createJWT(String githubAppId, String path) throws Exception {
-        SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.RS256;
-
-        long nowMillis = System.currentTimeMillis();
-        Date now = new Date(nowMillis);
-
-        //Sign JWT with private key
-        Key signingKey = getPrivateKey(path);
-
-        //Set the JWT Claims
-        JwtBuilder builder = Jwts.builder().setIssuedAt(now).setIssuer(githubAppId).signWith(signingKey, signatureAlgorithm);
-
-        //Add the expiration
-        long expMillis = nowMillis + jwtExpirationTimeInMS;
-        Date exp = new Date(expMillis);
-        builder.setExpiration(exp);
-
-        return builder.compact();
+    @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    static class GithubSearchResult {
+        @JsonProperty("incomplete_results")
+        private boolean incompleteResults;
+        @JsonProperty("items")
+        private List<AdTeam> items;
     }
 
 }
