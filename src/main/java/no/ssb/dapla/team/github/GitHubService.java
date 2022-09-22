@@ -19,6 +19,7 @@ import java.net.URL;
 import java.util.Date;
 import java.util.List;
 
+@Data
 @Service
 public class GitHubService {
     private final long jwtExpirationTimeInMS = 600000;
@@ -56,7 +57,7 @@ public class GitHubService {
 
     }
 
-    private void updateTokenIfExpired() {
+    protected void updateTokenIfExpired() {
         try {
             if (ghAppInstallationToken.getExpiresAt().before(new Date())) {
 
@@ -111,8 +112,8 @@ public class GitHubService {
         return githubSearchResult
                 .getItems()
                 .stream()
-                .map(adTeam -> new Team(adTeam.getRepoName().replace("-iac",""),
-                        adTeam.getRepoName().replace("-iac",""),
+                .map(adTeam -> new Team(adTeam.getRepoName().replace("-iac", ""),
+                        adTeam.getRepoName().replace("-iac", ""),
                         adTeam.getFullRepoName()))
                 .toList();
     }
