@@ -5,6 +5,7 @@ import no.ssb.dapla.team.groups.GroupController;
 import no.ssb.dapla.team.groups.GroupModelAssembler;
 import no.ssb.dapla.team.groups.GroupRepository;
 import no.ssb.dapla.team.users.UserModelAssembler;
+import no.ssb.dapla.team.users.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -44,6 +45,9 @@ class GroupControllerTest {
 
     @MockBean
     private UserModelAssembler userModelAssembler;
+
+    @MockBean
+    private UserRepository userRepository;
 
     @Test
     void givenGroups_whenListAllGroups_thenReturnHalDocument() throws Exception {
