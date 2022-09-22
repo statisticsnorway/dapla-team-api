@@ -37,7 +37,7 @@ public class MicrosoftGraphService {
     public MicrosoftGraphService(@NonNull @Value("${ad.app.client.id}") String clientId,
                                  @NonNull @Value("${ad.app.tenant.id}") String tenantId,
                                  @NonNull @Value("${ad.app.privatekey.file}") String keyPath,
-                                 @NonNull @Value("${ad.app.certificate.file}") String certPath) throws Exception {
+                                 @NonNull @Value("${ad.app.certificate.file}") String certPath) {
 
         this.scopeUrl = "https://graph.microsoft.com/.default";
         String authorityUrl = "https://login.microsoftonline.com/" + tenantId + "/";
