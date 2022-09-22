@@ -75,7 +75,7 @@ public class GitHubService {
         }
     }
 
-    public String getRepositoryInOrganizationWithTopicAsJson(String topic) throws Exception {
+    public String getRepositoryInOrganizationWithTopicAsJsonString(String topic) throws Exception {
         updateTokenIfExpired();
         String accessToken = ghAppInstallationToken.getToken();
         URL url = new URL("https://api.github.com/search/repositories?q=org:statisticsnorway+" + topic);
@@ -106,18 +106,34 @@ public class GitHubService {
     }
 
     public List<Team> getTeamListWithTopic(String topic) throws Exception {
-        GithubSearchResult githubSearchResult = new ObjectMapper().readValue(getRepositoryInOrganizationWithTopicAsJson(topic), GithubSearchResult.class);
+        GithubSearchResult githubSearchResult = new ObjectMapper().readValue(getRepositoryInOrganizationWithTopicAsJsonString(topic), GithubSearchResult.class);
 
         return githubSearchResult
                 .getItems()
                 .stream()
-                .map(adTeam ->
-                        Team.builder()
-                                .uniformTeamName(adTeam.getRepoName())
-                                .displayTeamName(adTeam.fullRepoName)
-                                .build())
+                .map(adTeam -> new Team(adTeam.getRepoName().replace("-iac",""),
+                        adTeam.getRepoName().replace("-iac",""),
+                        adTeam.getFullRepoName()))
                 .toList();
     }
+
+    public void readTfVars(String repoName) throws IOException {
+        System.out.println(ghAppInstallationToken.getToken());
+        GHRepository ghRepository = ghOrganization.getRepository(repoName);
+        GHContent ghContent = ghRepository.getFileContent("terraform.tfvars");
+        StringBuilder fileData;
+
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(ghContent.read()));
+        String line;
+        fileData = new StringBuilder();
+
+        while ((line = bufferedReader.readLine()) != null) {
+            fileData.append(line);
+        }
+        System.out.println(fileData);
+
+    }
+
 
     public List<GHRepository> getRepositoryInOrganizationWithNameContaining(String containing) {
         updateTokenIfExpired();

@@ -1,8 +1,10 @@
 package no.ssb.dapla.team.groups;
 
 import lombok.RequiredArgsConstructor;
+import no.ssb.dapla.team.teams.TeamRepository;
 import no.ssb.dapla.team.users.User;
 import no.ssb.dapla.team.users.UserModelAssembler;
+import no.ssb.dapla.team.users.UserRepository;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
@@ -25,6 +27,9 @@ public class GroupController {
     private final GroupModelAssembler assembler;
 
     private final UserModelAssembler userModelAssembler;
+
+    private final UserRepository userRepository;
+
 
 
     @GetMapping()
@@ -50,16 +55,24 @@ public class GroupController {
     public EntityModel<User> patchUser(@PathVariable String groupName, @RequestBody User user) {
         Group group = groupRepository.findById(groupName)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Group " + groupName + " does not exist"));
+        //User needs to be in db
+        User userInDatabase = userRepository
+                .findById(user.getEmailShort())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User " + user.getEmailShort() + " does not exist"));
 
-        Optional<User> optionalUser = group.getUsers().stream().filter(userTemp -> userTemp.getEmailShort().equals(user.getEmailShort())).findAny();
+        Optional<User> optionalUser = group
+                .getUsers()
+                .stream()
+                .filter(userTemp -> userTemp.getEmailShort().equals(user.getEmailShort()))
+                .findAny();
 
         if (optionalUser.isEmpty()) {
-            group.getUsers().add(user);
+            group.getUsers().add(userInDatabase);
             groupRepository.saveAndFlush(group);
         }
 
 
-        return userModelAssembler.toModel(user);
+        return userModelAssembler.toModel(userInDatabase);
     }
 
 }
