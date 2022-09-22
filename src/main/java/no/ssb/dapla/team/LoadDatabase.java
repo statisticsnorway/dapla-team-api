@@ -32,6 +32,7 @@ public class LoadDatabase {
             //System.out.println(microsoftGraphService.getJsonTeamListFromGraph());
             // Teams
             List<Team> teams = gitHubService.getTeamListWithTopic("dapla-team");
+            //gitHubService.readTfVars("demo-enhjoern-a-iac");
             teamRepository.saveAll(teams);
         };
     }
