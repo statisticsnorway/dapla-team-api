@@ -1,13 +1,10 @@
 package no.ssb.dapla.team.github;
 
-import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import no.ssb.dapla.team.teams.Team;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
@@ -16,17 +13,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 public class GitHubServiceTest {
     @Autowired
-    private GitHubService realGhService;
+    private GitHubService gitHubService;
+
     @Test
-    void testTokenNotNull(){
-        assertThat(realGhService.getGhAppInstallationToken().getToken()).isNotNull();
+    void tokenNotBlank() throws Exception {
+        assertThat(gitHubService.getGhAppInstallationToken().getToken())
+                .isNotBlank();
     }
 
+    @Test
+    void getTeamListWithTopicUsingApi() throws Exception {
+        assertThat(gitHubService.getTeamListWithTopic("terraform"))
+                .isNotEmpty();
+    }
 
     @Test
-    void getRepositoryInOrganizationWithTopicAsJsonString() throws Exception {
+    void deserializeTeamAndAddGroups() throws Exception {
         GitHubServiceDummy gitHubServiceDummy = new GitHubServiceDummy("", "", "");
-        realGhService.getGhAppInstallationToken().getToken();
 
         List<Team> teams = gitHubServiceDummy.getTeamListWithTopic("");
 
@@ -118,7 +121,6 @@ public class GitHubServiceTest {
                         }
                     ]
                 }""";
-
     }
 }
 
