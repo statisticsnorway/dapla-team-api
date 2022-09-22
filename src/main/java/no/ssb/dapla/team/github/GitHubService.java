@@ -76,7 +76,7 @@ public class GitHubService {
     }
 
     public String getRepositoryInOrganizationWithTopicAsJson(String topic) throws Exception {
-
+        updateTokenIfExpired();
         String accessToken = ghAppInstallationToken.getToken();
         URL url = new URL("https://api.github.com/search/repositories?q=org:statisticsnorway+" + topic);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();

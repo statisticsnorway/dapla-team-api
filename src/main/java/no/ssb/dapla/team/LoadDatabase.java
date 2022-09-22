@@ -29,8 +29,7 @@ public class LoadDatabase {
             // Users
             List<User> users = filebasedUserService.fetchAllUsers();
             userRepository.saveAll(users);
-            //fails
-            System.out.println(microsoftGraphService.getJsonTeamListFromGraph());
+            //System.out.println(microsoftGraphService.getJsonTeamListFromGraph());
             // Teams
             List<Team> teams = gitHubService.getTeamListWithTopic("dapla-team");
             teamRepository.saveAll(teams);

@@ -41,19 +41,23 @@ public class MicrosoftGraphService {
 
         this.scopeUrl = "https://graph.microsoft.com/.default";
         String authorityUrl = "https://login.microsoftonline.com/" + tenantId + "/";
+        //Try catch så den ikke skal crashe poden
+        try {
+            PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(Files.readAllBytes(Paths.get(keyPath)));
+            PrivateKey key = KeyFactory.getInstance("RSA").generatePrivate(spec);
 
-        PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(Files.readAllBytes(Paths.get(keyPath)));
-        PrivateKey key = KeyFactory.getInstance("RSA").generatePrivate(spec);
+            InputStream certStream = new ByteArrayInputStream(Files.readAllBytes(Paths.get(certPath)));
+            X509Certificate cert = (X509Certificate) CertificateFactory.getInstance("X.509").generateCertificate(certStream);
+            InputStream keyPathInputStream = new FileInputStream(keyPath);
 
-        InputStream certStream = new ByteArrayInputStream(Files.readAllBytes(Paths.get(certPath)));
-        X509Certificate cert = (X509Certificate) CertificateFactory.getInstance("X.509").generateCertificate(certStream);
-        InputStream keyPathInputStream = new FileInputStream(keyPath);
-
-        confidentialClientApplication = ConfidentialClientApplication.builder(
-                        clientId,
-                        ClientCredentialFactory.createFromCertificate(keyPathInputStream, certPath))
-                .authority(authorityUrl)
-                .build();
+            confidentialClientApplication = ConfidentialClientApplication.builder(
+                            clientId,
+                            ClientCredentialFactory.createFromCertificate(keyPathInputStream, certPath))
+                    .authority(authorityUrl)
+                    .build();
+        } catch (Exception e) {
+            new RuntimeException("Could not setup MicrosoftGraphService");
+        }
 
     }
 
