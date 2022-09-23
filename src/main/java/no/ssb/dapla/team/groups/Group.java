@@ -8,6 +8,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@ToString
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,6 +18,12 @@ public class Group {
     @NonNull
     @Column(unique = true)
     private String id;
+
+    /** Azure AD object ID */
+    private String azureAdId;
+
+    /** Group name */
+    private String name;
 
     @ManyToMany(cascade = CascadeType.MERGE)
     private List<User> users;
