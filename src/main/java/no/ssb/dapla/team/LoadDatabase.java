@@ -3,7 +3,6 @@ package no.ssb.dapla.team;
 import lombok.extern.slf4j.Slf4j;
 import no.ssb.dapla.team.github.GitHubService;
 import no.ssb.dapla.team.groups.Group;
-import no.ssb.dapla.team.microsoftgraph.MicrosoftGraphService;
 import no.ssb.dapla.team.teams.Team;
 import no.ssb.dapla.team.teams.TeamRepository;
 import no.ssb.dapla.team.users.FilebasedUserService;
@@ -15,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
 
+
 @Configuration
 @Slf4j
 public class LoadDatabase {
@@ -22,8 +22,7 @@ public class LoadDatabase {
     CommandLineRunner initDatabase(UserRepository userRepository,
                                    TeamRepository teamRepository,
                                    FilebasedUserService filebasedUserService,
-                                   GitHubService gitHubService,
-                                   MicrosoftGraphService microsoftGraphService) {
+                                   GitHubService gitHubService) {
 
         return args -> {
             // Users

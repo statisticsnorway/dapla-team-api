@@ -28,13 +28,13 @@ release: ## Release a new version. Update POMs and tag the new version in git
 run-local: ## Run the app locally (without docker)
 	java -jar  target/dapla-team-api-*.jar
 
-.PHONY: create-azure-app-certificate
-create-azure-app-certificate: ## Create an Azure AD Application certificate
-	bin/create-azure-app-certificate.sh
+.PHONY: create-ad-app-certificate
+create-ad-app-certificate: ## Create an Azure AD Application certificate
+	bin/create-ad-app-certificate.sh
 
-.PHONY: create-azure-app-sealedsecret
-create-azure-app-sealedsecret: ## Create the Azure AD Application sealed secret
-	bin/create-azure-app-sealedsecret.sh
+.PHONY: create-ad-app-sealedsecret
+create-ad-app-sealedsecret: ## Create the Azure AD Application sealed secret
+	bin/create-ad-app-sealedsecret.sh
 
 .PHONY: create-github-app-sealedsecret
 create-github-app-sealedsecret: ## Create the GitHub Application sealed secret
