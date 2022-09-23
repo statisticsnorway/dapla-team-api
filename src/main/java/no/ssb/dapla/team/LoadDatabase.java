@@ -30,8 +30,12 @@ public class LoadDatabase {
             userRepository.saveAll(users);
             //System.out.println(microsoftGraphService.getJsonTeamListFromGraph());
             // Teams
+            //try {
             List<Team> teams = gitHubService.getTeamListWithTopic("dapla-team");
             teamRepository.saveAll(teams);
+           /* }catch(NullPointerException e){
+                new RuntimeException(e);
+            }*/
         };
     }
 

@@ -7,6 +7,7 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 import lombok.Data;
 import lombok.NonNull;
 import no.ssb.dapla.team.teams.Team;
+import org.apache.commons.lang3.StringUtils;
 import org.kohsuke.github.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import java.net.URL;
 import java.util.Date;
 import java.util.List;
 
+@Data
 @Service
 public class GitHubService {
     private final long jwtExpirationTimeInMS = 600000;
@@ -35,28 +37,28 @@ public class GitHubService {
 
     public GitHubService(@NonNull @Value("${github.app.id}") String appId,
                          @NonNull @Value("${github.app.privatekey.file}") String privateKeyPath,
-                         @NonNull @Value("${github.organization}") String organizationName) {
+                         @NonNull @Value("${github.organization}") String organizationName) throws Exception {
 
         this.organizationName = organizationName;
         this.appId = appId;
         this.privateKeyPath = privateKeyPath;
 
-        try {
-            String jwtToken = GitHubUtils.createJWT(appId, privateKeyPath, jwtExpirationTimeInMS);
-            GitHub gitHubApp = new GitHubBuilder().withJwtToken(jwtToken).build();
+        // try {
+        String jwtToken = GitHubUtils.createJWT(appId, privateKeyPath, jwtExpirationTimeInMS);
+        GitHub gitHubApp = new GitHubBuilder().withJwtToken(jwtToken).build();
 
-            GHAppInstallation appInstallation = gitHubApp.getApp().getInstallationByOrganization(organizationName);
-            ghAppInstallationToken = appInstallation.createToken().create();
-            GitHub githubAuthAsInst = new GitHubBuilder().withAppInstallationToken(ghAppInstallationToken.getToken()).build();
-            ghOrganization = githubAuthAsInst.getOrganization(organizationName);
-
+        GHAppInstallation appInstallation = gitHubApp.getApp().getInstallationByOrganization(organizationName);
+        ghAppInstallationToken = appInstallation.createToken().create();
+        GitHub githubAuthAsInst = new GitHubBuilder().withAppInstallationToken(ghAppInstallationToken.getToken()).build();
+        ghOrganization = githubAuthAsInst.getOrganization(organizationName);
+/*
         } catch (Exception e) {
             new RuntimeException("Could not setup GitHubService");
-        }
+        }*/
 
     }
 
-    private void updateTokenIfExpired() {
+    protected void updateTokenIfExpired() {
         try {
             if (ghAppInstallationToken.getExpiresAt().before(new Date())) {
 
@@ -75,7 +77,7 @@ public class GitHubService {
         }
     }
 
-    public String getRepositoryInOrganizationWithTopicAsJson(String topic) throws Exception {
+    public String getRepositoryInOrganizationWithTopicAsJsonString(String topic) throws Exception {
         updateTokenIfExpired();
         String accessToken = ghAppInstallationToken.getToken();
         URL url = new URL("https://api.github.com/search/repositories?q=org:statisticsnorway+" + topic);
@@ -106,18 +108,36 @@ public class GitHubService {
     }
 
     public List<Team> getTeamListWithTopic(String topic) throws Exception {
-        GithubSearchResult githubSearchResult = new ObjectMapper().readValue(getRepositoryInOrganizationWithTopicAsJson(topic), GithubSearchResult.class);
+        GithubSearchResult githubSearchResult = new ObjectMapper().readValue(getRepositoryInOrganizationWithTopicAsJsonString(topic), GithubSearchResult.class);
 
         return githubSearchResult
                 .getItems()
                 .stream()
-                .map(adTeam ->
-                        Team.builder()
-                                .uniformTeamName(adTeam.getRepoName())
-                                .displayTeamName(adTeam.fullRepoName)
-                                .build())
+                .map(adTeam -> new Team(adTeam.getRepoName().replace("-iac", ""),
+                        StringUtils.capitalize(adTeam.getRepoName()
+                                .replace("-iac", "")
+                                .replace("-", " ")),
+                        adTeam.getFullRepoName()))
                 .toList();
     }
+
+    public void readTfVars(String repoName) throws IOException {
+        System.out.println(ghAppInstallationToken.getToken());
+        GHRepository ghRepository = ghOrganization.getRepository(repoName);
+        GHContent ghContent = ghRepository.getFileContent("terraform.tfvars");
+        StringBuilder fileData;
+
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(ghContent.read()));
+        String line;
+        fileData = new StringBuilder();
+
+        while ((line = bufferedReader.readLine()) != null) {
+            fileData.append(line);
+        }
+        System.out.println(fileData);
+
+    }
+
 
     public List<GHRepository> getRepositoryInOrganizationWithNameContaining(String containing) {
         updateTokenIfExpired();
