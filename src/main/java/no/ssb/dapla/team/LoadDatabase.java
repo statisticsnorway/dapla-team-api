@@ -3,6 +3,8 @@ package no.ssb.dapla.team;
 import lombok.extern.slf4j.Slf4j;
 import no.ssb.dapla.team.github.GitHubService;
 import no.ssb.dapla.team.groups.Group;
+import no.ssb.dapla.team.groups.GroupRepository;
+import no.ssb.dapla.team.groups.GroupService;
 import no.ssb.dapla.team.teams.Team;
 import no.ssb.dapla.team.teams.TeamRepository;
 import no.ssb.dapla.team.users.FilebasedUserService;
@@ -21,8 +23,10 @@ public class LoadDatabase {
     @Bean
     CommandLineRunner initDatabase(UserRepository userRepository,
                                    TeamRepository teamRepository,
+                                   GroupRepository groupRepository,
                                    FilebasedUserService filebasedUserService,
-                                   GitHubService gitHubService) {
+                                   GitHubService gitHubService,
+                                   GroupService groupService) {
 
         return args -> {
             // Users
@@ -36,6 +40,17 @@ public class LoadDatabase {
            /* }catch(NullPointerException e){
                 new RuntimeException(e);
             }*/
+
+            List<String> teamSuffixes = List.of("managers", "data-admins", "developers", "consumers", "support");
+            teamSuffixes.forEach(teamSuffix -> {
+                        teams.forEach(team -> {
+                            groupService.findGroupByName(team.getUniformTeamName().replace("-iac", "") + "-" + teamSuffix)
+                                    .ifPresent(group -> {
+                                        groupRepository.save(group);
+                                    });
+                        });
+                    }
+            );
         };
     }
 
