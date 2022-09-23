@@ -2,6 +2,7 @@ package no.ssb.dapla.team.github;
 
 import lombok.NonNull;
 import no.ssb.dapla.team.teams.Team;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,10 +12,11 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@Disabled
 public class GitHubServiceTest {
     @Autowired
     private GitHubService gitHubService;
-/*
+
     @Test
     void tokenNotBlank() throws Exception {
         assertThat(gitHubService.getGhAppInstallationToken().getToken())
@@ -25,7 +27,7 @@ public class GitHubServiceTest {
     void getTeamListWithTopicUsingGitHubApi() throws Exception {
         assertThat(gitHubService.getTeamListWithTopic("terraform"))
                 .isNotEmpty();
-    }*/
+    }
 
     @Test
     void deserializeTeamAndAddGroups() throws Exception {
