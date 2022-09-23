@@ -49,7 +49,7 @@ public class GitHubServiceTest {
     }
 
     static class GitHubServiceDummy extends GitHubService {
-        public GitHubServiceDummy(@NonNull String appId, @NonNull String privateKeyPath, @NonNull String organizationName) {
+        public GitHubServiceDummy(@NonNull String appId, @NonNull String privateKeyPath, @NonNull String organizationName) throws Exception {
             super(appId, privateKeyPath, organizationName);
         }
 
