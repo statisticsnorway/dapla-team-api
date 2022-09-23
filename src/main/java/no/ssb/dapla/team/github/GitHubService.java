@@ -1,6 +1,5 @@
 package no.ssb.dapla.team.github;
 
-import com.ctc.wstx.util.StringUtil;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -38,24 +37,24 @@ public class GitHubService {
 
     public GitHubService(@NonNull @Value("${github.app.id}") String appId,
                          @NonNull @Value("${github.app.privatekey.file}") String privateKeyPath,
-                         @NonNull @Value("${github.organization}") String organizationName) {
+                         @NonNull @Value("${github.organization}") String organizationName) throws Exception {
 
         this.organizationName = organizationName;
         this.appId = appId;
         this.privateKeyPath = privateKeyPath;
 
-        try {
-            String jwtToken = GitHubUtils.createJWT(appId, privateKeyPath, jwtExpirationTimeInMS);
-            GitHub gitHubApp = new GitHubBuilder().withJwtToken(jwtToken).build();
+        // try {
+        String jwtToken = GitHubUtils.createJWT(appId, privateKeyPath, jwtExpirationTimeInMS);
+        GitHub gitHubApp = new GitHubBuilder().withJwtToken(jwtToken).build();
 
-            GHAppInstallation appInstallation = gitHubApp.getApp().getInstallationByOrganization(organizationName);
-            ghAppInstallationToken = appInstallation.createToken().create();
-            GitHub githubAuthAsInst = new GitHubBuilder().withAppInstallationToken(ghAppInstallationToken.getToken()).build();
-            ghOrganization = githubAuthAsInst.getOrganization(organizationName);
-
+        GHAppInstallation appInstallation = gitHubApp.getApp().getInstallationByOrganization(organizationName);
+        ghAppInstallationToken = appInstallation.createToken().create();
+        GitHub githubAuthAsInst = new GitHubBuilder().withAppInstallationToken(ghAppInstallationToken.getToken()).build();
+        ghOrganization = githubAuthAsInst.getOrganization(organizationName);
+/*
         } catch (Exception e) {
             new RuntimeException("Could not setup GitHubService");
-        }
+        }*/
 
     }
 
@@ -117,7 +116,7 @@ public class GitHubService {
                 .map(adTeam -> new Team(adTeam.getRepoName().replace("-iac", ""),
                         StringUtils.capitalize(adTeam.getRepoName()
                                 .replace("-iac", "")
-                                .replace("-"," ")),
+                                .replace("-", " ")),
                         adTeam.getFullRepoName()))
                 .toList();
     }
