@@ -1,5 +1,6 @@
 package no.ssb.dapla.team.github;
 
+import com.ctc.wstx.util.StringUtil;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,6 +8,7 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 import lombok.Data;
 import lombok.NonNull;
 import no.ssb.dapla.team.teams.Team;
+import org.apache.commons.lang3.StringUtils;
 import org.kohsuke.github.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -113,7 +115,9 @@ public class GitHubService {
                 .getItems()
                 .stream()
                 .map(adTeam -> new Team(adTeam.getRepoName().replace("-iac", ""),
-                        adTeam.getRepoName().replace("-iac", ""),
+                        StringUtils.capitalize(adTeam.getRepoName()
+                                .replace("-iac", "")
+                                .replace("-"," ")),
                         adTeam.getFullRepoName()))
                 .toList();
     }
