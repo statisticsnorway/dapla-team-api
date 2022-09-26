@@ -1,9 +1,9 @@
 package no.ssb.dapla.team.groups;
 
-import jakarta.persistence.*;
 import lombok.*;
 import no.ssb.dapla.team.users.User;
 
+import javax.persistence.*;
 import java.util.List;
 
 @Getter
