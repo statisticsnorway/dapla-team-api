@@ -19,8 +19,10 @@ public class Team {
     @Column(unique = true)
     private String uniformTeamName;
     private String displayTeamName;
+    /** GitHub repository path */
     private String repo;
 
+    /** Groups in team */
     @OneToMany(cascade = CascadeType.MERGE)
     private List<Group> groups;
 
