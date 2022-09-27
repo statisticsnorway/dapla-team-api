@@ -2,12 +2,9 @@ package no.ssb.dapla.team.github;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 import lombok.Data;
 import lombok.NonNull;
-import no.ssb.dapla.team.teams.Team;
-import org.apache.commons.lang3.StringUtils;
 import org.kohsuke.github.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -23,6 +20,7 @@ import java.util.List;
 @Data
 @Service
 public class GitHubService {
+
     private static final long JWT_EXPIRATION_TIME_IN_MS = 600000;
 
     private final String appId;
@@ -34,7 +32,15 @@ public class GitHubService {
     private GHOrganization ghOrganization;
     private GHAppInstallationToken ghAppInstallationToken;
 
-
+    /**
+     * Loads GitHub properties and creates the GitHub application, if the application is installed
+     * in the Organization it will create an application installation token that can be used to access the
+     * GitHub API.
+     *
+     * @param appId string GitHubApplication ID, loads github.app.id
+     * @param privateKeyPath string GitHub organization name, loads github.organization
+     * @param organizationName string Path to github application private key, loads github.app.privatekey.file
+     */
     public GitHubService(@NonNull @Value("${github.app.id}") String appId,
                          @NonNull @Value("${github.app.privatekey.file}") String privateKeyPath,
                          @NonNull @Value("${github.organization}") String organizationName) throws Exception {
@@ -52,6 +58,9 @@ public class GitHubService {
         ghOrganization = githubAuthAsInst.getOrganization(organizationName);
     }
 
+    /**
+     * Updates the ghAppInstallationToken if it has expired
+     */
     protected void updateTokenIfExpired() {
         try {
             if (ghAppInstallationToken.getExpiresAt().before(new Date())) {
@@ -71,6 +80,12 @@ public class GitHubService {
         }
     }
 
+    /**
+     * Compiles a list of all GitHub repositories in the organization with a given topic
+     *
+     * @param topic GitHub repository topic
+     * @return response as string
+     */
     public String getRepositoryInOrganizationWithTopicAsJsonString(String topic) throws IOException {
         updateTokenIfExpired();
         String accessToken = ghAppInstallationToken.getToken();
@@ -101,20 +116,8 @@ public class GitHubService {
         }
     }
 
-    public List<Team> getTeamListWithTopic(String topic) throws Exception {
-        GithubSearchResult githubSearchResult = new ObjectMapper().readValue(getRepositoryInOrganizationWithTopicAsJsonString(topic), GithubSearchResult.class);
-
-        return githubSearchResult
-                .getItems()
-                .stream()
-                .map(adTeam -> new Team(adTeam.getRepoName().replace("-iac", ""),
-                        StringUtils.capitalize(adTeam.getRepoName()
-                                .replace("-iac", "")
-                                .replace("-", " ")),
-                        adTeam.getFullRepoName()))
-                .toList();
-    }
-
+    /*TODO: read a repositories terraform.tfvars file, waiting for contents read-only privliges
+       https://ssb-norge.slack.com/archives/C014MLD3US3/p1663663159673499 */
     public void readTfVars(String repoName) throws IOException {
         GHRepository ghRepository = ghOrganization.getRepository(repoName);
         GHContent ghContent = ghRepository.getFileContent("terraform.tfvars");
@@ -127,11 +130,15 @@ public class GitHubService {
         while ((line = bufferedReader.readLine()) != null) {
             fileData.append(line);
         }
-
     }
 
-
-    public List<GHRepository> getRepositoryInOrganizationWithNameContaining(String containing) {
+    /**
+     * Compiles a list of all GitHub repositories in the organization that contains
+     *
+     * @param contains GitHub repository topic
+     * @return list of teams with repository name containing name
+     */
+    public List<GHRepository> getRepositoryInOrganizationWithNameContaining(String contains) {
         updateTokenIfExpired();
         List<GHRepository> repositoryList;
         try {
@@ -139,12 +146,12 @@ public class GitHubService {
             repositoryList = ghOrganization.getRepositories()
                     .values()
                     .stream()
-                    .filter(ghRepository -> ghRepository.getName().contains(containing))
+                    .filter(ghRepository -> ghRepository.getName().contains(contains))
                     .toList();
 
 
         } catch (IOException e) {
-            throw new GitHubServiceException("Failed to get organizations repositories containing: " + containing);
+            throw new GitHubServiceException("Failed to get organizations repositories containing: " + contains);
         }
         return repositoryList;
     }
