@@ -43,7 +43,7 @@ public class TeamController {
                 linkTo(methodOn(TeamController.class).list()).withSelfRel());
     }
 
-    @Operation(summary = "Get group by id")
+    @Operation(summary = "Get team by id")
     @GetMapping("/{id}")
     public EntityModel<Team> getById(@PathVariable String id) {
         Team team = teamRepository.findById(id) //
