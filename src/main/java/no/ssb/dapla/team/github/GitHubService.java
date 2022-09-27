@@ -67,11 +67,11 @@ public class GitHubService {
             }
 
         } catch (Exception e) {
-            new RuntimeException("Could not refresh token");
+            throw new GitHubServiceException("Could not refresh token");
         }
     }
 
-    public String getRepositoryInOrganizationWithTopicAsJsonString(String topic) throws Exception {
+    public String getRepositoryInOrganizationWithTopicAsJsonString(String topic) throws IOException {
         updateTokenIfExpired();
         String accessToken = ghAppInstallationToken.getToken();
         URL url = new URL("https://api.github.com/search/repositories?q=org:statisticsnorway+" + topic);
@@ -116,7 +116,6 @@ public class GitHubService {
     }
 
     public void readTfVars(String repoName) throws IOException {
-        System.out.println(ghAppInstallationToken.getToken());
         GHRepository ghRepository = ghOrganization.getRepository(repoName);
         GHContent ghContent = ghRepository.getFileContent("terraform.tfvars");
         StringBuilder fileData;
@@ -128,7 +127,6 @@ public class GitHubService {
         while ((line = bufferedReader.readLine()) != null) {
             fileData.append(line);
         }
-        System.out.println(fileData);
 
     }
 
@@ -146,7 +144,7 @@ public class GitHubService {
 
 
         } catch (IOException e) {
-            throw new RuntimeException("Failed to get organizations repositories containing: " + containing);
+            throw new GitHubServiceException("Failed to get organizations repositories containing: " + containing);
         }
         return repositoryList;
     }
