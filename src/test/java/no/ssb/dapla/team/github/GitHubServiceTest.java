@@ -18,7 +18,7 @@ class GitHubServiceTest {
     private GitHubService gitHubService;
 
     @Test
-    void tokenNotBlank() throws Exception {
+    void tokenNotBlank() {
         assertThat(gitHubService.getGhAppInstallationToken().getToken())
                 .isNotBlank();
     }
@@ -58,7 +58,7 @@ class GitHubServiceTest {
         }
 
         @Override
-        public String getRepositoryInOrganizationWithTopicAsJsonString(String topic) throws Exception {
+        public String getRepositoryInOrganizationWithTopicAsJsonString(String topic) {
             return teamsAsJson;
         }
 
