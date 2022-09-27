@@ -25,6 +25,7 @@ public class Group {
     /** Group name */
     private String name;
 
+    /** List of users in group */
     @ManyToMany(cascade = CascadeType.MERGE)
     private List<User> users;
 
