@@ -13,14 +13,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(RootController.class)
-public class RootControllerTest {
+class RootControllerTest {
 
 
     @Autowired
     private MockMvc mockMvc;
 
     @Test
-    public void shouldReturnDefaultMessage() throws Exception {
+    void shouldReturnDefaultMessage() throws Exception {
         this.mockMvc.perform(get("/"))
                 .andDo(print())
                 .andDo(print())

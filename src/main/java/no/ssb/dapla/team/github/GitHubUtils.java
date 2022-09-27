@@ -3,6 +3,7 @@ package no.ssb.dapla.team.github;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.experimental.UtilityClass;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -12,9 +13,10 @@ import java.security.PrivateKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Date;
 
+@UtilityClass
 public class GitHubUtils {
 
-    protected static PrivateKey getPrivateKey(String filename) throws Exception {
+    static PrivateKey getPrivateKey(String filename) throws Exception {
         byte[] keyBytes = Files.readAllBytes(Paths.get(filename));
 
         PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
@@ -22,7 +24,7 @@ public class GitHubUtils {
         return kf.generatePrivate(spec);
     }
 
-    protected static String createJWT(String githubAppId, String path, long jwtExpirationTimeInMS) throws Exception {
+    static String createJWT(String githubAppId, String path, long jwtExpirationTimeInMS) throws Exception {
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.RS256;
 
         long nowMillis = System.currentTimeMillis();

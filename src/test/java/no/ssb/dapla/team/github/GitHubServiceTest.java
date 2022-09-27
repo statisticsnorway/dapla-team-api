@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Disabled
-public class GitHubServiceTest {
+class GitHubServiceTest {
     @Autowired
     private GitHubService gitHubService;
 
@@ -35,7 +35,7 @@ public class GitHubServiceTest {
 
         List<Team> teams = gitHubServiceDummy.getTeamListWithTopic("");
 
-        assertThat(teams.size() == 2).isTrue();
+        assertThat(teams).hasSize(2);
 
         assertThat(teams.get(0).getUniformTeamName()).isEqualTo("kostra-test");
         assertThat(teams.get(1).getUniformTeamName()).isEqualTo("kostra-test2");

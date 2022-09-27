@@ -11,7 +11,7 @@ import org.springframework.test.context.ActiveProfiles;
 @Disabled
 @SpringBootTest
 @ActiveProfiles("local")
-public class GroupServiceTest {
+class GroupServiceTest {
 
     @Autowired
     private GroupService groupService;

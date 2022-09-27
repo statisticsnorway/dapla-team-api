@@ -1,9 +1,5 @@
 package no.ssb.dapla.team.users;
 
-import no.ssb.dapla.team.users.User;
-import no.ssb.dapla.team.users.UserController;
-import no.ssb.dapla.team.users.UserModelAssembler;
-import no.ssb.dapla.team.users.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

@@ -1,7 +1,6 @@
 package no.ssb.dapla.team.groups;
 
 import com.microsoft.graph.requests.GraphServiceClient;
-import com.microsoft.graph.requests.GroupCollectionPage;
 import com.microsoft.graph.requests.UserCollectionPage;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +10,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
+
+import static no.ssb.dapla.team.util.UuidValidator.validateUuid;
 
 @Service
 @RequiredArgsConstructor
@@ -80,16 +80,6 @@ public class GroupService {
         }
 
         return users;
-    }
-
-    // TODO: Move to util
-    private static void validateUuid(String id) {
-        try {
-            UUID.fromString(id);
-        }
-        catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Assumed arg to be an UUID, but was " + id);
-        }
     }
 
 }

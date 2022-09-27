@@ -1,7 +1,6 @@
 package no.ssb.dapla.team.groups;
 
 import lombok.RequiredArgsConstructor;
-import no.ssb.dapla.team.teams.TeamRepository;
 import no.ssb.dapla.team.users.User;
 import no.ssb.dapla.team.users.UserModelAssembler;
 import no.ssb.dapla.team.users.UserRepository;

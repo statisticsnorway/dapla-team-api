@@ -23,7 +23,7 @@ import java.util.List;
 @Data
 @Service
 public class GitHubService {
-    private final long jwtExpirationTimeInMS = 600000;
+    private static final long JWT_EXPIRATION_TIME_IN_MS = 600000;
 
     private final String appId;
 
@@ -43,26 +43,20 @@ public class GitHubService {
         this.appId = appId;
         this.privateKeyPath = privateKeyPath;
 
-        // try {
-        String jwtToken = GitHubUtils.createJWT(appId, privateKeyPath, jwtExpirationTimeInMS);
+        String jwtToken = GitHubUtils.createJWT(appId, privateKeyPath, JWT_EXPIRATION_TIME_IN_MS);
         GitHub gitHubApp = new GitHubBuilder().withJwtToken(jwtToken).build();
 
         GHAppInstallation appInstallation = gitHubApp.getApp().getInstallationByOrganization(organizationName);
         ghAppInstallationToken = appInstallation.createToken().create();
         GitHub githubAuthAsInst = new GitHubBuilder().withAppInstallationToken(ghAppInstallationToken.getToken()).build();
         ghOrganization = githubAuthAsInst.getOrganization(organizationName);
-/*
-        } catch (Exception e) {
-            new RuntimeException("Could not setup GitHubService");
-        }*/
-
     }
 
     protected void updateTokenIfExpired() {
         try {
             if (ghAppInstallationToken.getExpiresAt().before(new Date())) {
 
-                String jwtToken = GitHubUtils.createJWT(appId, privateKeyPath, jwtExpirationTimeInMS);
+                String jwtToken = GitHubUtils.createJWT(appId, privateKeyPath, JWT_EXPIRATION_TIME_IN_MS);
                 GitHub gitHubApp = new GitHubBuilder().withJwtToken(jwtToken).build();
 
 

@@ -6,11 +6,14 @@ import com.univocity.parsers.csv.CsvParser;
 import com.univocity.parsers.csv.CsvParserSettings;
 import lombok.Data;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
 
@@ -28,7 +31,7 @@ public class FilebasedUserService {
     }
 
     public List<User> fetchAllUsers() {
-        try (Reader inputReader = new InputStreamReader(Files.newInputStream(new File(usersFilePath).toPath()), "UTF-8")) {
+        try (Reader inputReader = new InputStreamReader(Files.newInputStream(new File(usersFilePath).toPath()), StandardCharsets.UTF_8)) {
             BeanListProcessor<AdUser> rowProcessor = new BeanListProcessor<>(AdUser.class);
             CsvParserSettings settings = new CsvParserSettings();
             settings.setHeaderExtractionEnabled(true);
