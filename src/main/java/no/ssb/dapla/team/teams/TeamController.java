@@ -1,5 +1,6 @@
 package no.ssb.dapla.team.teams;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import no.ssb.dapla.team.groups.Group;
 import no.ssb.dapla.team.groups.GroupController;
@@ -32,6 +33,7 @@ public class TeamController {
     private final UserModelAssembler userModelAssembler;
     private final GroupModelAssembler groupModelAssembler;
 
+    @Operation(summary = "Get all teams")
     @GetMapping()
     public CollectionModel<EntityModel<Team>> list() {
         List<EntityModel<Team>> teams = teamRepository.findAll().stream() //
@@ -41,6 +43,7 @@ public class TeamController {
                 linkTo(methodOn(TeamController.class).list()).withSelfRel());
     }
 
+    @Operation(summary = "Get group by id")
     @GetMapping("/{id}")
     public EntityModel<Team> getById(@PathVariable String id) {
         Team team = teamRepository.findById(id) //
@@ -49,10 +52,11 @@ public class TeamController {
         return assembler.toModel(team);
     }
 
-    @GetMapping("/{teamName}/users")
-    public CollectionModel<EntityModel<User>> getUsersInTeam(@PathVariable String teamName) {
-        Team team = teamRepository.findById(teamName) //
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Team " + teamName + " does not exist"));
+    @Operation(summary = "Get users in a team by teamId")
+    @GetMapping("/{teamId}/users")
+    public CollectionModel<EntityModel<User>> getUsersInTeam(@PathVariable String teamId) {
+        Team team = teamRepository.findById(teamId) //
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Team " + teamId + " does not exist"));
 
         HashSet<User> resultSet = new HashSet<>();
 
@@ -64,10 +68,11 @@ public class TeamController {
                 linkTo(methodOn(UserController.class).list()).withSelfRel());
     }
 
-    @GetMapping("/{teamName}/groups")
-    public CollectionModel<EntityModel<Group>> listGroupsOfSpecificTeam(@PathVariable String teamName) {
-        Team team = teamRepository.findById(teamName) //
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Team " + teamName + " does not exist"));
+    @Operation(summary = "Get groups of a team by teamId")
+    @GetMapping("/{teamId}/groups")
+    public CollectionModel<EntityModel<Group>> listGroupsOfSpecificTeam(@PathVariable String teamId) {
+        Team team = teamRepository.findById(teamId) //
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Team " + teamId + " does not exist"));
 
         List<EntityModel<Group>> resultModel = team.getGroups().stream().map(groupModelAssembler::toModel).toList();
 

@@ -1,5 +1,6 @@
 package no.ssb.dapla.team.groups;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import no.ssb.dapla.team.users.User;
 import no.ssb.dapla.team.users.UserModelAssembler;
@@ -30,7 +31,7 @@ public class GroupController {
     private final UserRepository userRepository;
 
 
-
+    @Operation(summary = "Get all groups")
     @GetMapping()
     public CollectionModel<EntityModel<Group>> list() {
         List<EntityModel<Group>> groups = groupRepository.findAll().stream() //
@@ -41,6 +42,7 @@ public class GroupController {
                 linkTo(methodOn(GroupController.class).list()).withSelfRel());
     }
 
+    @Operation(summary = "Get group by id")
     @GetMapping("/{id}")
     public EntityModel<Group> getById(@PathVariable String id) {
         Group team = groupRepository.findById(id) //
@@ -49,11 +51,12 @@ public class GroupController {
         return assembler.toModel(team);
     }
 
+    @Operation(summary = "Add user to group")
     @ResponseStatus(code = HttpStatus.CREATED)
-    @PatchMapping("/{groupName}")
-    public EntityModel<User> patchUser(@PathVariable String groupName, @RequestBody User user) {
-        Group group = groupRepository.findById(groupName)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Group " + groupName + " does not exist"));
+    @PatchMapping("/{groupId}")
+    public EntityModel<User> patchUser(@PathVariable String groupId, @RequestBody User user) {
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Group " + groupId + " does not exist"));
         //User needs to be in db
         User userInDatabase = userRepository
                 .findById(user.getEmailShort())
