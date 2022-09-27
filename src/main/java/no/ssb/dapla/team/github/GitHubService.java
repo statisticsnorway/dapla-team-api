@@ -2,9 +2,12 @@ package no.ssb.dapla.team.github;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 import lombok.Data;
 import lombok.NonNull;
+import no.ssb.dapla.team.teams.Team;
+import org.apache.commons.lang3.StringUtils;
 import org.kohsuke.github.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -81,7 +84,7 @@ public class GitHubService {
     }
 
     /**
-     * Compiles a list of all GitHub repositories in the organization with a given topic
+     * Request a list of all GitHub repositories in the organization with a given topic
      *
      * @param topic GitHub repository topic
      * @return response as string
@@ -114,6 +117,27 @@ public class GitHubService {
             return String.format("Connection returned HTTP code: %s with message: %s",
                     httpResponseCode, conn.getResponseMessage());
         }
+    }
+
+    /**
+     * Deserializes JSON from getRepositoryInOrganizationWithTopicAsJsonString
+     * and make a list of all GitHub repositories in the organization with a given topic
+     *
+     * @param topic GitHub repository topic
+     * @return list of teams with given topic
+     */
+    public List<Team> getTeamListWithTopic(String topic) throws Exception {
+        GithubSearchResult githubSearchResult = new ObjectMapper().readValue(getRepositoryInOrganizationWithTopicAsJsonString(topic), GithubSearchResult.class);
+
+        return githubSearchResult
+                .getItems()
+                .stream()
+                .map(adTeam -> new Team(adTeam.getRepoName().replace("-iac", ""),
+                        StringUtils.capitalize(adTeam.getRepoName()
+                                .replace("-iac", "")
+                                .replace("-", " ")),
+                        adTeam.getFullRepoName()))
+                .toList();
     }
 
     /*TODO: read a repositories terraform.tfvars file, waiting for contents read-only privliges
