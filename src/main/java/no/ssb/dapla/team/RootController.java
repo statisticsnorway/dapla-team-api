@@ -1,5 +1,6 @@
 package no.ssb.dapla.team;
 
+import io.swagger.v3.oas.annotations.Operation;
 import no.ssb.dapla.team.teams.TeamController;
 import no.ssb.dapla.team.users.UserController;
 import org.springframework.hateoas.RepresentationModel;
@@ -13,6 +14,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RestController
 public class RootController {
 
+    @Operation(summary = "Get root options")
     @GetMapping("/")
     ResponseEntity<RepresentationModel> root() {
 
