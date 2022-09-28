@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -20,6 +21,7 @@ class RootControllerTest {
     private MockMvc mockMvc;
 
     @Test
+    @WithMockUser
     void shouldReturnDefaultMessage() throws Exception {
         this.mockMvc.perform(get("/"))
                 .andDo(print())

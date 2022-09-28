@@ -7,6 +7,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
@@ -41,6 +42,7 @@ class UserControllerTest {
 
 
     @Test
+    @WithMockUser
     void givenUsers_whenListAllUsers_thenReturnHalDocument()
             throws Exception {
         given(repository.findAll()).willReturn(

@@ -9,6 +9,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
@@ -34,7 +35,6 @@ class TeamControllerTest {
             Team::getUniformTeamName, Function.identity()
     ));
 
-
     @Autowired
     private MockMvc mvc;
 
@@ -48,6 +48,7 @@ class TeamControllerTest {
     private GroupModelAssembler groupModelAssembler;
 
     @Test
+    @WithMockUser
     void givenTeams_whenListAllTeams_thenReturnHalDocument()
             throws Exception {
         given(repository.findAll()).willReturn(
