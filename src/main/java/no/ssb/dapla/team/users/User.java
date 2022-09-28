@@ -17,8 +17,9 @@ public class User {
     @Id
     @NonNull
     @Column(unique = true)
-
+    /** AD User principle */
     private String emailShort;
+    /** Full name */
     private String name;
     private String email;
 

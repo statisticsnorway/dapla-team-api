@@ -1,5 +1,6 @@
 package no.ssb.dapla.team.users;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -24,6 +25,7 @@ public class UserController {
 
     private final UserModelAssembler assembler;
 
+    @Operation(summary = "Get all users")
     @GetMapping()
     public CollectionModel<EntityModel<User>> list() {
         List<EntityModel<User>> user = userRepository.findAll().stream() //
@@ -33,6 +35,7 @@ public class UserController {
                 linkTo(methodOn(UserController.class).list()).withSelfRel());
     }
 
+    @Operation(summary = "Get user by id")
     @GetMapping("/{id}")
     public EntityModel<User> getById(@PathVariable String id) {
         User user = userRepository.findById(id) //
