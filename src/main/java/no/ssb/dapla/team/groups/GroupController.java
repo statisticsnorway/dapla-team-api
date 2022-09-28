@@ -8,6 +8,7 @@ import no.ssb.dapla.team.users.UserRepository;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -43,10 +44,10 @@ public class GroupController {
     }
 
     @Operation(summary = "Get group by id")
-    @GetMapping("/{id}")
-    public EntityModel<Group> getById(@PathVariable String id) {
-        Group team = groupRepository.findById(id) //
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Group " + id + " does not exist"));
+    @GetMapping("/{groupId}")
+    public EntityModel<Group> getById(@PathVariable String groupId) {
+        Group team = groupRepository.findById(groupId) //
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Group " + groupId + " does not exist"));
 
         return assembler.toModel(team);
     }
@@ -54,7 +55,8 @@ public class GroupController {
     @Operation(summary = "Add user to group")
     @ResponseStatus(code = HttpStatus.CREATED)
     @PatchMapping("/{groupId}")
-    public EntityModel<User> patchUser(@PathVariable String groupId, @RequestBody User user) {
+    @PreAuthorize("@groupAuthorizer.isTeamManagerForAssociatedGroup(authentication, #groupId)")
+    public EntityModel<User> addUserToGroup(@PathVariable String groupId, @RequestBody User user) {
         Group group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Group " + groupId + " does not exist"));
         //User needs to be in db
