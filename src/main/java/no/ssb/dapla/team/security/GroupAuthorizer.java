@@ -5,13 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import no.ssb.dapla.team.groups.GroupRepository;
 import no.ssb.dapla.team.users.User;
 import no.ssb.dapla.team.util.GroupNameUtil;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.jwt.Jwt;
-
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
+import java.security.Principal;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -20,51 +16,51 @@ import java.util.stream.Collectors;
 @Slf4j
 public class GroupAuthorizer {
 
-    private static final String PREFERRED_USERNAME = "preferred_username";
-
     private final GroupRepository groupRepository;
 
     /**
      * For a given team name, check if the authenticated user is member of the managers group.
      *
-     * @param authentication jwt
-     * @param teamName e.g. demo-enhjoern-a
+     * @param principal JWT
+     * @param teamName  e.g. demo-enhjoern-a
      * @return true iff the user is member of the team's managers group
      */
-    public boolean isTeamManagerForTeam(Authentication authentication, String teamName) {
+    public boolean isTeamManagerForTeam(Principal principal, String teamName) {
+        log.debug("Check if principal (%s) is manager for team %s".formatted(principal.getName(), teamName));
         String groupName = GroupNameUtil.managersGroupNameOf(teamName);
-        return isMemberOfGroup(authentication, groupName);
+        return isMemberOfGroup(principal, groupName);
     }
 
     /**
      * For a given group, check if the authenticated user is member of the associated team's managers group.
-     *
+     * <p>
      * E.g. Given groupName=demo-enhjoern-a-developers, return true only if the user is member of
      * demo-enhjoern-a-managers.
-     *
+     * <p>
      * This can be used to make sure that only managers are authorized to perform certain actions,
      * such as add new team members, etc.
      *
-     * @param authentication jwt token
+     * @param principal JWT
      * @param groupName e.g. demo-enhjoern-a-developers
      * @return true iff the user is member of the managers group associated with the group in question
      */
-    public boolean isTeamManagerForAssociatedGroup(Authentication authentication, String groupName) {
+    public boolean isTeamManagerForAssociatedGroup(Principal principal, String groupName) {
+        log.debug("Check if principal (%s) is manager for group %s".formatted(principal.getName(), groupName));
         String teamName = GroupNameUtil.deduceTeamNameFromGroup(groupName);
-        return isTeamManagerForTeam(authentication, teamName);
+        return isTeamManagerForTeam(principal, teamName);
     }
 
     /**
-     * Check if the authenticated user is member of a given group
+     * Check if the authenticated user is member of a given group.
      *
-     * @param authentication
-     * @param groupName
-     * @return
+     * @param principal JWT
+     * @param groupName e.g. demo-enhjoern-a-developers
+     * @return true iff the user is member of a specific group
      */
-    public boolean isMemberOfGroup(Authentication authentication, String groupName) {
+    public boolean isMemberOfGroup(Principal principal, String groupName) {
         boolean accessOk = false;
         try {
-            String userId = userIdOf(authentication);
+            String userId = principal.getName();
             log.debug("Check if user %s is member of group %s".formatted(userId, groupName));
             Set<String> members = groupRepository.getReferenceById(groupName)
                     .getUsers().stream()
@@ -73,35 +69,11 @@ public class GroupAuthorizer {
             accessOk = members.contains(userId);
             log.debug("%s members: %s".formatted(groupName, members));
         } catch (Exception e) {
-            log.debug("Failed to check if principal is member of group", e);
+            log.warn("Error checking if principal is member of group", e);
         }
 
-        log.debug("isMemberOfGroup %s: %s".formatted(groupName, accessOk));
+        log.debug("isMemberOfGroup: is %s member of group %s: %s".formatted(principal.getName(), groupName, accessOk));
         return accessOk;
-    }
-
-    /**
-     * Return the value of a named claim (e.g. userId) from the authentication context
-     *
-     * @param authentication jwt
-     * @param claim claim name
-     * @return Optional value of the claim
-     * @throws IllegalStateException if the authentication object is not a JWT
-     */
-    private static Optional<Object> claimOf(Authentication authentication, String claim) {
-        if (authentication instanceof JwtAuthenticationToken) {
-            Jwt jwt = (Jwt) authentication.getPrincipal();
-            return Optional.ofNullable(jwt.getClaim(claim));
-        }
-        else {
-            throw new IllegalStateException("Expected authentication object to be a JWT, but was " + authentication.getClass());
-        }
-    }
-
-    private static String userIdOf(Authentication authentication) {
-        String claim = PREFERRED_USERNAME;
-        return (String) claimOf(authentication, claim)
-                .orElseThrow((() -> new IllegalStateException("Unable to find '%s' claim in keycloak token".formatted(claim))));
     }
 
 }
