@@ -3,7 +3,6 @@ package no.ssb.dapla.team.util;
 
 import org.junit.jupiter.api.Test;
 
-
 import java.util.List;
 
 import static no.ssb.dapla.team.util.GroupNameUtil.*;
