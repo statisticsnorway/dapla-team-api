@@ -32,6 +32,7 @@ public class LoadDatabase {
             List<User> users = filebasedUserService.fetchAllUsers();
             userRepository.saveAll(users);
             List<Team> teams = gitHubService.getTeamListWithTopic("dapla-team");
+            log.info("Fetched teams from GitHub:\n {}", teams.stream().map(t -> t.getUniformTeamName()).toList());
             teamRepository.saveAll(teams);
 
             List<String> teamSuffixes = List.of("managers", "data-admins", "developers", "consumers", "support");
