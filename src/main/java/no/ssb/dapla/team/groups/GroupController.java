@@ -83,9 +83,11 @@ public class GroupController {
     @Operation(summary = "Get users of group")
     @GetMapping("/{groupId}/users")
     public CollectionModel<EntityModel<User>> getUsers(@PathVariable String groupId) {
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Group " + groupId + " does not exist"));
+
         List<EntityModel<User>> usersModel =
-                groupRepository.getReferenceById(groupId)
-                        .getUsers().stream()
+                group.getUsers().stream()
                         .map(user -> EntityModel.of(user)
                                 .add(linkTo(methodOn(UserController.class).getById(user.getEmailShort())).withSelfRel()))
                         .toList();
