@@ -1,6 +1,5 @@
 package no.ssb.dapla.team.groups;
 
-import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
 
@@ -8,11 +7,14 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Component
-public class GroupModelAssembler implements RepresentationModelAssembler<Group, EntityModel<Group>> {
+public class GroupModelAssembler implements RepresentationModelAssembler<Group, GroupModel> {
     @Override
-    public EntityModel<Group> toModel(Group group) {
+    public GroupModel toModel(Group group) {
 
-        return EntityModel.of(group, //
-                linkTo(methodOn(GroupController.class).getById(group.getId())).withSelfRel());
+        GroupModel model = new GroupModel(group);
+        model.add(linkTo(methodOn(GroupController.class).getById(group.getId())).withSelfRel());
+        model.add(linkTo(methodOn(GroupController.class).getUsers(group.getId())).withRel("users"));
+
+        return model;
     }
 }

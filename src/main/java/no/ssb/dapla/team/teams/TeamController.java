@@ -2,8 +2,8 @@ package no.ssb.dapla.team.teams;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import no.ssb.dapla.team.groups.Group;
 import no.ssb.dapla.team.groups.GroupController;
+import no.ssb.dapla.team.groups.GroupModel;
 import no.ssb.dapla.team.groups.GroupModelAssembler;
 import no.ssb.dapla.team.users.User;
 import no.ssb.dapla.team.users.UserController;
@@ -35,8 +35,8 @@ public class TeamController {
 
     @Operation(summary = "Get all teams")
     @GetMapping()
-    public CollectionModel<EntityModel<Team>> list() {
-        List<EntityModel<Team>> teams = teamRepository.findAll().stream() //
+    public CollectionModel<TeamModel> list() {
+        List<TeamModel> teams = teamRepository.findAll().stream() //
                 .map(assembler::toModel).toList();
 
         return CollectionModel.of(teams, //
@@ -45,7 +45,7 @@ public class TeamController {
 
     @Operation(summary = "Get team by id")
     @GetMapping("/{id}")
-    public EntityModel<Team> getById(@PathVariable String id) {
+    public TeamModel getById(@PathVariable String id) {
         Team team = teamRepository.findById(id) //
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Team " + id + " does not exist"));
 
@@ -70,11 +70,11 @@ public class TeamController {
 
     @Operation(summary = "Get groups of a team by teamId")
     @GetMapping("/{teamId}/groups")
-    public CollectionModel<EntityModel<Group>> listGroupsOfSpecificTeam(@PathVariable String teamId) {
+    public CollectionModel<GroupModel> listGroupsOfSpecificTeam(@PathVariable String teamId) {
         Team team = teamRepository.findById(teamId) //
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Team " + teamId + " does not exist"));
 
-        List<EntityModel<Group>> resultModel = team.getGroups().stream().map(groupModelAssembler::toModel).toList();
+        List<GroupModel> resultModel = team.getGroups().stream().map(groupModelAssembler::toModel).toList();
 
         return CollectionModel.of(resultModel, //
                 linkTo(methodOn(GroupController.class).list()).withSelfRel());

@@ -3,6 +3,7 @@ package no.ssb.dapla.team.groups;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import no.ssb.dapla.team.users.User;
+import no.ssb.dapla.team.users.UserController;
 import no.ssb.dapla.team.users.UserModelAssembler;
 import no.ssb.dapla.team.users.UserRepository;
 import org.springframework.hateoas.CollectionModel;
@@ -34,8 +35,8 @@ public class GroupController {
 
     @Operation(summary = "Get all groups")
     @GetMapping()
-    public CollectionModel<EntityModel<Group>> list() {
-        List<EntityModel<Group>> groups = groupRepository.findAll().stream() //
+    public CollectionModel<GroupModel> list() {
+        List<GroupModel> groups = groupRepository.findAll().stream() //
                 .map(assembler::toModel) //
                 .toList();
 
@@ -45,7 +46,7 @@ public class GroupController {
 
     @Operation(summary = "Get group by id")
     @GetMapping("/{groupId}")
-    public EntityModel<Group> getById(@PathVariable String groupId) {
+    public GroupModel getById(@PathVariable String groupId) {
         Group team = groupRepository.findById(groupId) //
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Group " + groupId + " does not exist"));
 
@@ -77,6 +78,21 @@ public class GroupController {
 
 
         return userModelAssembler.toModel(userInDatabase);
+    }
+
+    @Operation(summary = "Get users of group")
+    @GetMapping("/{groupId}/users")
+    public CollectionModel<EntityModel<User>> getUsers(@PathVariable String groupId) {
+        List<EntityModel<User>> usersModel =
+                groupRepository.getReferenceById(groupId)
+                        .getUsers().stream()
+                        .map(user -> EntityModel.of(user)
+                                .add(linkTo(methodOn(UserController.class).getById(user.getEmailShort())).withSelfRel()))
+                        .toList();
+
+        return CollectionModel.of(usersModel)
+                .add(linkTo(methodOn(GroupController.class).getUsers(groupId)).withSelfRel())
+                .add(linkTo(methodOn(GroupController.class).getById(groupId)).withRel("group"));
     }
 
 }
